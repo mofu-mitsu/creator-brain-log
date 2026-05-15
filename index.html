@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>創作深層心理診断 - Creator Brain Log -</title>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 画像保存用ライブラリ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 左上固定のEXITボタン -->
+    <a href="https://mofu-mitsu.github.io/lab.html" class="global-exit-btn"><i class="fa-solid fa-person-running"></i> EXIT</a>
+
+    <div class="glass-container">
+        
+        <!-- スタート画面 -->
+        <div id="start-screen" class="screen active">
+            <h1><i class="fa-solid fa-wand-magic-sparkles"></i> 創作16タイプ診断</h1>
+            <p class="subtitle">Creator Brain Log Analysis</p>
+            <p>あなたの「創作脳」の深層を解析します。</p>
+            <button id="start-btn" class="btn"><i class="fa-solid fa-power-off"></i> 解析を開始</button>
+            <button id="list-btn" class="sub-btn"><i class="fa-solid fa-book"></i> 16タイプ一覧を見る</button>
+        </div>
+
+        <!-- 16タイプ一覧画面 -->
+        <div id="list-screen" class="screen">
+            <h2><i class="fa-solid fa-database"></i> 創作16タイプ一覧</h2>
+            <div id="type-list-container" class="type-list"></div>
+            <button id="close-list-btn" class="btn"><i class="fa-solid fa-arrow-left"></i> 戻る</button>
+        </div>
+
+        <!-- ギミック：無意識カラー選択 -->
+        <div id="color-screen" class="screen">
+            <h2><i class="fa-solid fa-palette"></i> 脳内カラー抽出</h2>
+            <p>1600万色から、今のあなたの『創作魂』の色を作って！</p>
+            <div class="color-picker-wrapper">
+                <input type="color" id="free-color-picker" value="#ffb8d1">
+            </div>
+            <br>
+            <button id="color-submit" class="btn"><i class="fa-solid fa-check"></i> この色で確定</button>
+        </div>
+
+        <!-- 質問画面 -->
+        <div id="question-screen" class="screen">
+            <div class="log-header">
+                <span id="q-number">Q.1</span>
+                <span class="pulse-icon"><i class="fa-solid fa-heart-pulse"></i> 脳波測定中...</span>
+            </div>
+            <h2 id="question-text">質問テキスト</h2>
+            <p id="question-sub" class="sub-text"></p>
+
+            <div id="input-container"></div>
+
+            <div class="nav-buttons">
+                <button id="back-btn" class="sub-btn"><i class="fa-solid fa-arrow-left"></i> 戻る</button>
+                <button id="skip-btn" class="sub-btn">わからない <i class="fa-solid fa-forward"></i></button>
+            </div>
+            <button id="quit-btn" class="sub-btn quit-btn"><i class="fa-solid fa-door-open"></i> 診断を退出する</button>
+        </div>
+
+        <!-- 結果画面 -->
+        <div id="result-screen" class="screen">
+            <div id="capture-area" class="result-card">
+                <!-- ここにキャラ画像を入れる想定 (img id="result-img") -->
+                <h1 id="result-type">DCML</h1>
+                <h2 id="result-title">啓示型設計者</h2>
+                <div class="result-details">
+                    <p id="result-desc"></p>
+                    <div class="stats">
+                        <p>🔥 暴走注意: <span id="result-danger"></span></p>
+                        <p>⭐ 向いてる: <span id="result-best"></span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 行動ログ：画像保存からは外して、コピー機能をつける -->
+            <div class="action-log-container">
+                <h3><i class="fa-solid fa-microchip"></i> 観測された深層ログ</h3>
+                <div id="action-log-list" class="action-log-box"></div>
+                <button id="copy-log-btn" class="sub-btn"><i class="fa-solid fa-copy"></i> ログをコピー</button>
+            </div>
+
+            <div class="share-buttons">
+                <button id="save-img-btn" class="btn"><i class="fa-solid fa-camera"></i> 結果を保存</button>
+                <button id="share-btn" class="btn"><i class="fa-solid fa-share-nodes"></i> シェア</button>
+            </div>
+            <button id="restart-btn" class="sub-btn" style="width:100%; margin-top:10px;">もう一度</button>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
