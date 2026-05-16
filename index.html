@@ -1,35 +1,145 @@
-<!DOCTYPE html>
-<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>創作深層心理診断 - Creator Brain Log -</title>
-    <!-- FontAwesome -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GNTX973GET"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-GNTX973GET');
+    </script>
+    <!-- 🔍 SEO & OGP メタタグ設定 -->
+    <title>創作深層心理診断 - Creator Brain Log - | あなたの創作脳を解析</title>
+    <meta name="description" content="MBTIや心理機能論をベースに、クリエイター特有の「脳内の癖」や「無意識の行動」を暴き出す独自の心理解析システム。あなたの創作人格を全16タイプから精密に診断します！">
+    <meta name="keywords" content="創作診断, 16タイプ診断, クリエイター, 小説, イラスト, 深層心理, 心理機能, 性格診断">
+    
+    <meta property="og:title" content="創作深層心理診断 - Creator Brain Log -">
+    <meta property="og:description" content="迷った時間、選んだ色、行動ログから「創作時のあなたの深層心理」を解析するヤバい診断。">
+    <meta property="og:url" content="https://mofu-mitsu.github.io/creator-brain-log">
+    <meta property="og:image" content="https://mofu-mitsu.github.io/creator-brain-log/images/ogp.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <!-- ファビコン -->
+    <link rel="icon" href="images/favicon.ico">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- 画像保存用ライブラリ -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- 左上固定のEXITボタン -->
+    <!-- 🍔 ハンバーガーメニュー -->
+    <div class="menu-btn" id="menu-btn"><i class="fa-solid fa-bars"></i></div>
+    <div class="side-menu" id="side-menu">
+        <ul>
+            <li id="nav-title"><i class="fa-solid fa-house"></i> メインコンソールへ</li>
+            <li id="nav-list"><i class="fa-solid fa-database"></i> 16タイプ・アーカイブ</li>
+            <li id="nav-daily"><i class="fa-solid fa-satellite-dish"></i> 日次・観測ターミナル</li>
+            <li id="nav-about"><i class="fa-solid fa-book-open"></i> システム・マニュアル</li>
+        </ul>
+    </div>
+
+    <!-- 🎨 背景のカラーミキシング演出 -->
+    <div class="aura-bg"></div>
+    <div class="cyber-grid"></div>
+
     <a href="https://mofu-mitsu.github.io/lab.html" class="global-exit-btn"><i class="fa-solid fa-person-running"></i> EXIT</a>
+
+<!-- ========== index.html の glass-container の中を以下に差し替え！ ========== -->
 
     <div class="glass-container">
         
-        <!-- スタート画面 -->
+        <!-- 🌟 スタート画面（サイバーコンソール風に大改造！） -->
         <div id="start-screen" class="screen active">
-            <h1><i class="fa-solid fa-wand-magic-sparkles"></i> 創作16タイプ診断</h1>
-            <p class="subtitle">Creator Brain Log Analysis</p>
-            <p>あなたの「創作脳」の深層を解析します。</p>
-            <button id="start-btn" class="btn"><i class="fa-solid fa-power-off"></i> 解析を開始</button>
-            <button id="list-btn" class="sub-btn"><i class="fa-solid fa-book"></i> 16タイプ一覧を見る</button>
+            <p style="font-size: 0.8em; color: #a1c4fd; margin-bottom: 0; letter-spacing: 2px;">SYSTEM READY...</p>
+            <h1 class="rainbow-text" style="margin-top: 5px; font-size: 2em;"><i class="fa-solid fa-brain"></i> 創作深層心理診断</h1>
+            
+            <div class="intro-box">
+                <p><strong>【 Creator Brain Log とは 】</strong></p>
+                <p>心理機能論や類型論をベースにしつつ、クリエイター特有の「脳内の癖」にフォーカスした独自の解析システムです。</p>
+                <p>ただ用意された質問に答えるだけではありません。<br>
+                あなたが<strong>「選んだ色」「迷った時間」「画面上での無意識の行動」</strong>を裏でリアルタイムに観測し、あなたの『本当の創作スタイル』を全16タイプから導き出します。</p>
+            </div>
+
+            <!-- メインスキャンボタン（これだけデカくする！） -->
+            <button id="btn-start" class="cyber-main-btn">
+                <i class="fa-solid fa-fingerprint" style="font-size: 2em; display: block; margin-bottom: 5px;"></i>
+                [ 脳内スキャンを実行 ]
+            </button>
+
+            <!-- サブコンソールメニュー（リスト風にしてパクリ感を消す！） -->
+            <div class="cyber-menu-list">
+                <div class="cyber-menu-item" id="btn-daily">
+                    <i class="fa-solid fa-satellite-dish"></i> 日次・観測ターミナル
+                </div>
+                <div class="cyber-menu-item" id="btn-list">
+                    <i class="fa-solid fa-folder-tree"></i> 16タイプ・アーカイブ
+                </div>
+                <div class="cyber-menu-item" id="btn-about">
+                    <i class="fa-solid fa-file-signature"></i> システム・マニュアル
+                </div>
+            </div>
+        </div>
+
+        <!-- ⏳ ローディング画面（新設！） -->
+        <div id="loading-screen" class="screen">
+            <h2 id="loading-title" style="color: #a1c4fd; margin-top: 40px;"><i class="fa-solid fa-circle-notch fa-spin"></i> Analyzing...</h2>
+            <p id="loading-text">脳波パターンを同期中...</p>
+            
+            <!-- プログレスバー風の演出 -->
+            <div class="progress-box">
+                <div class="progress-bar" id="loading-bar"></div>
+            </div>
+
+            <!-- せっかちギミックボタン！ -->
+            <button id="impatient-btn" class="btn" style="margin-top: 40px; background: rgba(255, 94, 98, 0.2); border-color: #ff5e62; color: #ff5e62;">
+                待てない (強制スキップ)
+            </button>
+            <p style="font-size: 0.7em; color: #777;">※システムに負荷がかかります</p>
         </div>
 
         <!-- 16タイプ一覧画面 -->
         <div id="list-screen" class="screen">
-            <h2><i class="fa-solid fa-database"></i> 創作16タイプ一覧</h2>
+            <h2><i class="fa-solid fa-folder-tree"></i> 16タイプ・アーカイブ</h2>
             <div id="type-list-container" class="type-list"></div>
-            <button id="close-list-btn" class="btn"><i class="fa-solid fa-arrow-left"></i> 戻る</button>
+            <button id="close-list-btn" class="btn"><i class="fa-solid fa-arrow-left"></i> コンソールへ戻る</button>
+        </div>
+
+        <!-- 📖 診断・指標について画面 -->
+        <div id="about-screen" class="screen">
+            <h2><i class="fa-solid fa-file-signature"></i> システム・マニュアル</h2>
+            <div class="info-box">
+                <h3 id="about-title" style="color: #ffb8d1;"></h3>
+                <p id="about-desc"></p>
+                <hr style="border-color: rgba(255,255,255,0.2);">
+                <h3 style="color: #a1c4fd;"><i class="fa-solid fa-compass"></i> 4つの解析指標</h3>
+                <div id="about-axes"></div>
+            </div>
+            <button id="close-about-btn" class="btn" style="margin-top: 15px;">コンソールへ戻る</button>
+        </div>
+
+        <!-- 🌟 本日の創作啓示（運勢や星占いっぽさを排除！） -->
+        <div id="daily-screen" class="screen">
+            <h2><i class="fa-solid fa-satellite-dish"></i> 日次・観測ターミナル</h2>
+            <p style="font-size: 0.8em; color: #a1c4fd;">あなたのタイプに対する本日のシミュレーション結果</p>
+            
+            <select id="daily-type-select">
+                <option value="">▼ 観測対象のタイプを選択 ▼</option>
+            </select>
+
+            <div id="daily-result-box" class="info-box" style="display: none; text-align: left;">
+                <p style="text-align: center; font-size:0.8em; color:#a3be8c; border-bottom: 1px solid #a3be8c; padding-bottom: 5px;" id="daily-date">202X.X.X</p>
+                
+                <p><strong><i class="fa-solid fa-key"></i> 推奨モチーフ:</strong> <span id="daily-motif" style="color:#ffb8d1; font-weight: bold;"></span></p>
+                <p><strong><i class="fa-solid fa-music"></i> 最適な作業BGM:</strong> <span id="daily-bgm" style="color:#89f7fe;"></span></p>
+                <p><strong><i class="fa-solid fa-palette"></i> 推奨パレット:</strong> <span id="daily-color" style="color:#f6d365;"></span></p>
+                <p><strong><i class="fa-solid fa-film"></i> シミュレーション推奨シナリオ:</strong> <br><span id="daily-scene" style="color:#b28dff; font-size:0.9em;"></span></p>
+                <hr style="border-color: rgba(255,255,255,0.2);">
+                <p><strong><i class="fa-solid fa-triangle-exclamation"></i> システムからの警告:</strong><br> <span id="daily-warning" style="color:#ff5e62; font-size:0.9em;"></span></p>
+                <hr style="border-color: rgba(255,255,255,0.2);">
+                <p><strong><i class="fa-solid fa-satellite"></i> 本日共鳴率の高いクリエイター:</strong> <br><span id="daily-lucky-type" style="color:#a1c4fd; font-weight: bold;"></span></p>
+            </div>
+            <button id="close-daily-btn" class="btn" style="margin-top: 15px;">コンソールへ戻る</button>
         </div>
 
         <!-- ギミック：無意識カラー選択 -->
@@ -40,7 +150,7 @@
                 <input type="color" id="free-color-picker" value="#ffb8d1">
             </div>
             <br>
-            <button id="color-submit" class="btn"><i class="fa-solid fa-check"></i> この色で確定</button>
+            <button id="color-submit" class="btn" style="margin-top: 15px;"><i class="fa-solid fa-check"></i> この色で確定</button>
         </div>
 
         <!-- 質問画面 -->
@@ -51,43 +161,78 @@
             </div>
             <h2 id="question-text">質問テキスト</h2>
             <p id="question-sub" class="sub-text"></p>
-
             <div id="input-container"></div>
-
             <div class="nav-buttons">
                 <button id="back-btn" class="sub-btn"><i class="fa-solid fa-arrow-left"></i> 戻る</button>
-                <button id="skip-btn" class="sub-btn">わからない <i class="fa-solid fa-forward"></i></button>
+                <button id="skip-btn" class="sub-btn">パス <i class="fa-solid fa-forward"></i></button>
             </div>
-            <button id="quit-btn" class="sub-btn quit-btn"><i class="fa-solid fa-door-open"></i> 診断を退出する</button>
+            <button id="quit-btn" class="sub-btn quit-btn"><i class="fa-solid fa-door-open"></i> 解析を中断する</button>
         </div>
 
         <!-- 結果画面 -->
         <div id="result-screen" class="screen">
             <div id="capture-area" class="result-card">
-                <!-- ここにキャラ画像を入れる想定 (img id="result-img") -->
-                <h1 id="result-type">DCML</h1>
-                <h2 id="result-title">啓示型設計者</h2>
-                <div class="result-details">
+                <img id="result-img" src="" alt="" style="width: 120px; height: 120px; border-radius: 15px; object-fit: cover; margin-bottom: 10px; display: none; border: 2px solid #ffb8d1;">
+                <p id="result-group" style="margin: 0; font-size: 0.9em; color: #a3be8c; font-weight: bold; letter-spacing: 1px;"></p>
+                <h1 id="result-type" style="margin: 5px 0;">DCML</h1>
+                <h2 id="result-title" style="margin: 0; color: #a1c4fd;">啓示型設計者</h2>
+                <p id="result-quote" style="font-style: italic; color: #ffb8d1; font-weight: bold; padding: 10px; background: rgba(255,184,209,0.1); border-left: 4px solid #ffb8d1; font-size: 0.9em;"></p>
+                
+                <div class="result-details" style="text-align: left; font-size: 0.9em;">
                     <p id="result-desc"></p>
-                    <div class="stats">
-                        <p>🔥 暴走注意: <span id="result-danger"></span></p>
-                        <p>⭐ 向いてる: <span id="result-best"></span></p>
+                    <p><strong><i class="fa-solid fa-brain"></i> 脳内の癖：</strong><br><span id="result-personality"></span></p>
+                    <p><strong><i class="fa-solid fa-pen-nib"></i> 創作スタイル：</strong><br><span id="result-creative"></span></p>
+                    <div class="stats" style="margin: 15px 0; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 10px;">
+                        <p style="margin: 5px 0;">🔥 <strong>陥りがちなバグ(罠):</strong> <span id="result-danger" style="color:#ffb8d1;"></span></p>
+                        <p style="margin: 5px 0;">⭐ <strong>適性のあるジャンル:</strong> <span id="result-best" style="color:#89f7fe;"></span></p>
                     </div>
                 </div>
+
+                <h3 style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px;"><i class="fa-solid fa-chart-bar"></i> 解析スコア</h3>
+                <div id="result-bars" style="margin-bottom: 15px;"></div>
             </div>
 
-            <!-- 行動ログ：画像保存からは外して、コピー機能をつける -->
             <div class="action-log-container">
                 <h3><i class="fa-solid fa-microchip"></i> 観測された深層ログ</h3>
                 <div id="action-log-list" class="action-log-box"></div>
                 <button id="copy-log-btn" class="sub-btn"><i class="fa-solid fa-copy"></i> ログをコピー</button>
             </div>
 
-            <div class="share-buttons">
+            <div class="share-buttons" style="margin-top: 15px;">
                 <button id="save-img-btn" class="btn"><i class="fa-solid fa-camera"></i> 結果を保存</button>
                 <button id="share-btn" class="btn"><i class="fa-solid fa-share-nodes"></i> シェア</button>
             </div>
-            <button id="restart-btn" class="sub-btn" style="width:100%; margin-top:10px;">もう一度</button>
+            <button id="restart-btn" class="sub-btn" style="width:100%; margin-top:10px;">コンソールへ戻る</button>
+        </div>
+    </div> 
+
+    <!-- ⚠️ モーダル類 -->
+    <div id="quit-modal" class="modal">
+        <div class="modal-content glass-container">
+            <h3><i class="fa-solid fa-triangle-exclamation"></i> 解析を中断しますか？</h3>
+            <p>これまでの観測ログが消去されます。</p>
+            <div class="nav-buttons">
+                <button id="quit-yes" class="btn" style="background: rgba(255,94,98,0.5);">中断する</button>
+                <button id="quit-no" class="btn">続ける</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- キャラ詳細モーダル -->
+    <div id="type-detail-modal" class="modal">
+        <div class="modal-content glass-container" style="max-width: 600px; text-align: left; max-height: 80vh; overflow-y: auto;">
+            <button id="close-detail-btn" class="sub-btn" style="float: right;">✖ 閉じる</button>
+            <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
+                <img id="detail-img" src="" alt="画像なし" style="width: 120px; height: 120px; border-radius: 15px; border: 2px solid #ffb8d1; object-fit: cover; background: rgba(0,0,0,0.5);">
+                <div>
+                    <h1 id="detail-type" style="margin: 0; font-size: 1.5em;">TYPE</h1>
+                    <h2 id="detail-title" style="margin: 0; font-size: 1.2em; color: #a1c4fd;">TITLE</h2>
+                </div>
+            </div>
+            <p id="detail-quote" style="font-style: italic; color: #ffb8d1; font-weight: bold; padding: 10px; background: rgba(255,184,209,0.1); border-left: 4px solid #ffb8d1;">"Quote"</p>
+            <p><strong><i class="fa-solid fa-brain"></i> 脳内の癖：</strong><br><span id="detail-personality"></span></p>
+            <p><strong><i class="fa-solid fa-pen-nib"></i> 創作スタイル：</strong><br><span id="detail-creative"></span></p>
+            <p><strong><i class="fa-solid fa-triangle-exclamation"></i> 陥りがちなバグ：</strong><br><span id="detail-danger" style="color: #ff5e62;"></span></p>
         </div>
     </div>
 
