@@ -86,17 +86,6 @@ function shuffleArray(arr) {
 function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-
-    // 💰 広告エリアの表示/非表示切り替え
-    const adArea = document.getElementById('ad-area');
-    if (adArea) {
-        // 診断プロセス（質問、色選択、ローディング）の時だけ非表示にする
-        if (id === 'question-screen' || id === 'color-screen' || id === 'loading-screen') {
-            adArea.style.display = 'none';
-        } else {
-            adArea.style.display = 'block';
-        }
-    }
 }
 
 // ⚠️ 安全にイベントを登録する関数（nullエラーを完全に防止！）
