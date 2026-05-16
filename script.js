@@ -393,17 +393,16 @@ function showQuestion() {
     // ① 通常選択 ＆ イベント崩壊（2択）
     if (q.type === 'choice' || q.type === 'event_collapse') {
         q.choices.forEach(c => {
-            const btn = document.createElement('button');
-            btn.className = 'choice-btn';
-            btn.innerText = c.text;
+            const btn = document.createElement('button'); btn.className = 'choice-btn'; btn.innerText = c.text;
             btn.onclick = () => {
-                // マウスの迷いによる裏パラメータ加算
-                if (mouseDistance > 3000) {
-                    scores.M += 1;
-                    addLog(`マウス迷い検知: 計画(M)加算`);
-                } else if (mouseDistance < 500) {
-                    scores.I += 1;
-                    addLog(`即決検知: 衝動(I)加算`);
+                const answerTime = Date.now() - qStartTime;
+                // ⚠️ 即決判定を厳しく(1.2秒以内)、長考判定を長く(8秒以上)に修正！！
+                if (answerTime < 1200) { 
+                    scores.I++; 
+                    addLog(`> 超速即決検知(${answerTime}ms): 衝動(I)加算`); 
+                } else if (answerTime > 8000) { 
+                    scores.M++; 
+                    addLog(`> 慎重長考検知(${answerTime}ms): 計画(M)加算`); 
                 }
                 nextQuestion(c.scores);
             };
