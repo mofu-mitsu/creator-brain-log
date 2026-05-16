@@ -128,3 +128,466 @@ canvas {
     height: 120px; overflow-y: auto; margin-bottom: 10px;
     font-size: 0.85em; border: 1px solid #a1c4fd;
 }
+
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap');
+
+/* 🎨 背景アニメーション：創作オーラ */
+body {
+    margin: 0; padding: 0; font-family: 'M PLUS Rounded 1c', sans-serif;
+    background: #1a1a2e; color: #fff; display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; overflow: hidden; position: relative;
+}
+
+.aura-bg {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 20% 30%, #2b1055 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, #0f3460 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, #533483 0%, transparent 50%),
+                radial-gradient(circle at 10% 80%, #16213e 0%, transparent 40%);
+    filter: blur(80px); z-index: -1; animation: auraMove 20s infinite alternate;
+}
+
+@keyframes auraMove {
+    0% { transform: scale(1) rotate(0deg); }
+    100% { transform: scale(1.2) rotate(10deg); }
+}
+
+/* 虹色タイトル */
+.rainbow-text {
+    background: linear-gradient(to right, #ffb8d1, #a1c4fd, #ffb8d1);
+    background-size: 200% auto; -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; animation: rainbow 4s linear infinite;
+}
+@keyframes rainbow { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
+
+/* スクロールバー */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
+::-webkit-scrollbar-thumb { background: #ffb8d1; border-radius: 10px; border: 2px solid rgba(0,0,0,0); background-clip: content-box; }
+
+/* EXITボタン左上 */
+.global-exit-btn {
+    position: fixed; top: 15px; left: 15px; z-index: 5000;
+    background: rgba(0, 0, 0, 0.6); border: 1px solid #ffb8d1; color: #ffb8d1;
+    padding: 8px 15px; border-radius: 20px; text-decoration: none; font-size: 0.8em;
+}
+
+/* ガラスコンテナ */
+.glass-container {
+    background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 25px;
+    padding: 30px; width: 90%; max-width: 500px; text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4); z-index: 10;
+}
+
+/* 🌌 空の色ボタン（完全復活！） */
+.sky-palette { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+.sky-btn {
+    height: 80px; border-radius: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-weight: bold; border: 2px solid rgba(255,255,255,0.3); transition: 0.3s; color: #fff; text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+.sky-neon { background: linear-gradient(135deg, #ff00ff, #00ffff); }
+.sky-mono { background: linear-gradient(135deg, #333, #777); }
+.sky-sunset { background: linear-gradient(135deg, #ff7b54, #ffb26b); }
+.sky-deep { background: linear-gradient(135deg, #000428, #004e92); }
+.sky-btn:hover { transform: scale(1.05); border-color: #fff; box-shadow: 0 0 15px rgba(255,255,255,0.5); }
+
+/* モーダル */
+.modal {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7); z-index: 10000; justify-content: center; align-items: center;
+}
+.modal.active { display: flex; }
+
+/* 既存ボタン・共通パーツ */
+.btn, .choice-btn {
+    background: linear-gradient(135deg, rgba(255,184,209,0.3), rgba(161,196,253,0.3));
+    border: 1px solid rgba(255, 255, 255, 0.5); color: #fff; padding: 15px; border-radius: 15px;
+    cursor: pointer; width: 100%; margin-bottom: 10px; transition: 0.3s; font-weight: bold; font-family: inherit;
+}
+.btn:hover { background: rgba(255, 255, 255, 0.3); }
+.sub-btn { background: transparent; border: 1px solid #a1c4fd; color: #a1c4fd; padding: 8px 15px; border-radius: 10px; cursor: pointer; font-family: inherit; }
+
+/* キャンバス */
+canvas { background: #ffffff !important; border: 2px solid #ffb8d1; border-radius: 15px; cursor: crosshair; }
+.action-log-box { background: rgba(0, 0, 0, 0.4); color: #a3be8c; padding: 15px; border-radius: 10px; text-align: left; height: 120px; overflow-y: auto; font-family: monospace; font-size: 0.85em; border: 1px solid #a1c4fd; }
+
+/* ポップアップアラート */
+.popup-log { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(233, 69, 96, 0.9); padding: 15px; border-radius: 10px; color: #fff; z-index: 2000; box-shadow: 0 0 20px rgba(233, 69, 96, 0.8); }
+.glitch-active { animation: shake 0.2s infinite; filter: hue-rotate(90deg) contrast(150%); }
+@keyframes shake { 0% { transform: translate(1px, 1px); } 50% { transform: translate(-2px, -2px); } 100% { transform: translate(1px, -1px); } }
+
+/* --- 前回のCSSの一番下にこれを追加！ --- */
+
+/* 📊 指標パーセンテージバーのデザイン */
+.bar-wrapper {
+    margin-bottom: 12px;
+}
+.bar-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85em;
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+.bar-container {
+    width: 100%;
+    height: 12px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 6px;
+    display: flex;
+    overflow: hidden;
+}
+.bar-left {
+    height: 100%;
+    background: linear-gradient(90deg, #ff758c, #ff7eb3);
+    transition: width 1s ease-out;
+}
+.bar-right {
+    height: 100%;
+    background: linear-gradient(90deg, #89f7fe, #66a6ff);
+    transition: width 1s ease-out;
+}
+/* ==========================================
+   📱 スマホ用 レスポンシブデザイン
+========================================== */
+@media (max-width: 600px) {
+    .glass-container {
+        width: 95%;
+        padding: 20px;
+        max-height: 85vh; /* スマホでスクロールしやすく */
+        margin-top: 40px; /* 左上のEXITボタンと被らないように */
+    }
+
+    h1 { font-size: 1.5em; }
+    h2 { font-size: 1.2em; }
+    .subtitle, .sub-text { font-size: 0.75em; }
+
+    .btn, .choice-btn {
+        padding: 12px;
+        font-size: 0.9em;
+    }
+
+    .sky-btn {
+        height: 60px;
+        font-size: 0.85em;
+    }
+
+    /* モーダルの中身もスマホサイズに */
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+        max-height: 85vh;
+    }
+
+    /* キャンバスがスマホからはみ出ないように */
+    canvas {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* ログ表示エリアのフォントを小さく */
+    .action-log-box {
+        font-size: 0.75em;
+        height: 100px;
+        padding: 10px;
+    }
+
+    /* 画像保存エリアのパディング調整 */
+    .result-card {
+        padding: 15px 10px;
+    }
+}
+
+/* ==========================================
+   🍔 ハンバーガーメニュー ＆ 日替わり画面
+========================================== */
+.menu-btn {
+    position: fixed; top: 15px; right: 15px; z-index: 6000;
+    background: rgba(0, 0, 0, 0.6); border: 1px solid #a1c4fd; color: #a1c4fd;
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    cursor: pointer; font-size: 1.2em; transition: 0.3s;
+}
+.menu-btn:hover { background: rgba(161, 196, 253, 0.3); }
+
+.side-menu {
+    position: fixed; top: 0; right: -250px; width: 200px; height: 100vh;
+    background: rgba(20, 15, 40, 0.95); backdrop-filter: blur(10px);
+    border-left: 1px solid rgba(255,255,255,0.2); z-index: 5500;
+    transition: right 0.3s ease-in-out; padding-top: 70px;
+    box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+}
+.side-menu.active { right: 0; }
+
+.side-menu ul { list-style: none; padding: 0; margin: 0; }
+.side-menu li {
+    padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
+    cursor: pointer; color: #fff; font-size: 0.9em; transition: 0.3s;
+}
+.side-menu li:hover { background: rgba(255, 184, 209, 0.2); color: #ffb8d1; }
+.side-menu li i { margin-right: 10px; width: 20px; text-align: center; }
+
+/* スマホ表示の最適化 (Responsive) */
+@media (max-width: 600px) {
+    .glass-container { width: 92%; padding: 20px; margin-top: 20px; }
+    h1 { font-size: 1.3em; }
+    .global-exit-btn { font-size: 0.7em; padding: 5px 10px; }
+}
+
+/* ==========================================
+   🎨 背景アニメーション（オーロラ＆グリッド）
+========================================== */
+body {
+    background: linear-gradient(-45deg, #1e1332, #182848, #4b134f, #0f2027);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* うっすらとしたサイバー網目模様 */
+.cyber-grid {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none;
+}
+
+/* 説明文などを囲う綺麗なボックス */
+.info-box {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: left;
+    font-size: 0.9em;
+    line-height: 1.6;
+    max-height: 50vh;
+    overflow-y: auto;
+}
+.intro-box {
+    background: rgba(255, 184, 209, 0.1);
+    border-left: 4px solid #ffb8d1;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: left;
+    font-size: 0.9em;
+}
+/* ==========================================
+   📱 ダッシュボード型 UIデザイン
+========================================== */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.dash-card {
+    border-radius: 15px;
+    padding: 20px 10px;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(255,255,255,0.3);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+.dash-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+.dash-card i { font-size: 2em; margin-bottom: 10px; }
+.dash-card h3 { margin: 0 0 5px; font-size: 1em; color: #fff; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
+.dash-card p { margin: 0; font-size: 0.7em; opacity: 0.9; }
+
+/* 各カードのグラデーションカラー */
+.start-card { background: linear-gradient(135deg, #667eea, #764ba2); grid-column: span 2; padding: 25px 10px; }
+.start-card h3 { font-size: 1.3em; }
+.daily-card { background: linear-gradient(135deg, #f6d365, #fda085); color: #333; }
+.daily-card h3 { color: #333; text-shadow: none; }
+.daily-card p { color: #333; }
+.list-card { background: linear-gradient(135deg, #ff9a9e, #fecfef); color: #333; }
+.list-card h3, .list-card p { color: #333; text-shadow: none; }
+.about-card { background: linear-gradient(135deg, #84fab0, #8fd3f4); color: #333; grid-column: span 2;}
+.about-card h3, .about-card p { color: #333; text-shadow: none; }
+
+/* レスポンシブ微調整 */
+@media (max-width: 400px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .dash-card { grid-column: span 1 !important; }
+}
+
+/* style.css の以下の部分を差し替え＆追加してね！ */
+
+/* 🎨 鮮やかなオーロラ背景に変更！ */
+body {
+    background: #0f172a; /* ベースは暗くして文字を見やすく */
+}
+
+.aura-bg {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: 
+        radial-gradient(circle at 15% 50%, rgba(255, 117, 140, 0.45), transparent 55%),
+        radial-gradient(circle at 85% 30%, rgba(137, 247, 254, 0.45), transparent 55%),
+        radial-gradient(circle at 50% 80%, rgba(161, 140, 209, 0.45), transparent 55%);
+    filter: blur(60px);
+    z-index: -1;
+    animation: auraMove 15s infinite alternate;
+}
+
+/* 📱 スマホのお絵描きスクロール防止設定（canvasタグの部分を以下に変更） */
+canvas {
+    background: #ffffff !important;
+    border: 2px solid #ffb8d1;
+    border-radius: 15px;
+    cursor: crosshair;
+    touch-action: none; /* ★超重要：これでスマホでなぞっても画面が動かなくなる！ */
+    max-width: 100%;
+    height: auto;
+}
+
+/* ==========================================
+   🖥️ サイバーコンソール風 UIデザイン
+========================================== */
+
+/* メインの巨大スキャンボタン */
+.cyber-main-btn {
+    background: rgba(161, 196, 253, 0.1);
+    border: 2px solid #a1c4fd;
+    color: #a1c4fd;
+    width: 100%;
+    padding: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    font-family: monospace; /* サイバー感を出す */
+    text-shadow: 0 0 10px rgba(161, 196, 253, 0.8);
+    box-shadow: 0 0 15px rgba(161, 196, 253, 0.2) inset;
+}
+.cyber-main-btn:hover {
+    background: rgba(161, 196, 253, 0.3);
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(161, 196, 253, 0.5) inset, 0 0 20px rgba(161, 196, 253, 0.3);
+}
+
+/* サブメニューのリスト */
+.cyber-menu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.cyber-menu-item {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ddd;
+    padding: 15px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: left;
+    transition: 0.3s;
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+}
+.cyber-menu-item i {
+    margin-right: 15px;
+    font-size: 1.2em;
+    color: #ffb8d1;
+}
+.cyber-menu-item:hover {
+    background: rgba(255, 184, 209, 0.1);
+    border-color: #ffb8d1;
+    color: #fff;
+    padding-left: 25px; /* ホバー時に少し右に動くサイバー演出 */
+}
+
+/* ⏳ ローディング演出 */
+.progress-box {
+    width: 100%;
+    height: 10px;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid #a1c4fd;
+    border-radius: 5px;
+    margin-top: 20px;
+    overflow: hidden;
+    position: relative;
+}
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: #a1c4fd;
+    box-shadow: 0 0 10px #a1c4fd;
+    transition: width 0.1s linear;
+}
+
+/* ==========================================
+   🖋️ 入力フォーム・プルダウン最適化
+========================================== */
+/* 自由記述テキストエリア */
+.cyber-textarea {
+    width: 90%;
+    height: 80px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    border: 1px solid #a1c4fd;
+    padding: 10px;
+    font-family: inherit;
+    font-size: 1rem;
+    resize: vertical;
+    outline: none;
+    box-shadow: inset 0 0 10px rgba(161, 196, 253, 0.1);
+}
+.cyber-textarea:focus {
+    border-color: #ffb8d1;
+    box-shadow: inset 0 0 15px rgba(255, 184, 209, 0.2);
+}
+
+/* プルダウン（はみ出しバグ修正！） */
+#daily-type-select {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box; /* はみ出しを完全に防ぐ */
+    padding: 15px;
+    font-size: 1rem;
+    font-family: inherit;
+    border-radius: 10px;
+    background-color: rgba(20, 15, 40, 0.8);
+    color: #fff;
+    border: 1px solid #ffb8d1;
+    /* ブラウザ標準のデザインを消して統一する魔法のコード */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    /* 右端にオリジナルの矢印アイコンを配置 */
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffb8d1" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+#daily-type-select:focus {
+    outline: none;
+    box-shadow: 0 0 15px rgba(255, 184, 209, 0.5);
+}
+#daily-type-select option {
+    background-color: #1e1332; /* ドロップダウンの背景を暗く */
+    color: #fff;
+}
