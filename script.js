@@ -1,412 +1,1055 @@
-const questionsData = [
-    {
-        type: "choice",
-        text: "新しい作品を作り始めるとき、まず何から考える？",
-        choices: [
-            { text: "キャラのビジュアル、性格、関係性！", scores: { C: 2 } },
-            { text: "その世界のルール、歴史、システム", scores: { E: 2 } }
-        ]
-    },
-    {
-        type: "choice",
-        text: "キャラが絶体絶命のピンチ！どう切り抜けさせる？",
-        subText: "（※裏ギミック：即答なら衝動[I]、迷ったら計画[M]に加点されます）",
-        choices: [
-            { text: "キャラの強い想いと感情の爆発で突破！", scores: { A: 2 } },
-            { text: "事前に張っておいた伏線と論理で解決！", scores: { L: 2 } }
-        ]
-    },
-    {
-        type: "choice",
-        text: "あなたの普段の作業スタイルに近いのは？",
-        choices: [
-            { text: "ノリと勢い！深夜に突然筆が走る", scores: { I: 2, D: 1 } },
-            { text: "プロットや構成をきっちり練ってから進める", scores: { M: 2, F: 1 } }
-        ]
-    },
-    {
-        type: "choice_deep",
-        text: "創作中、一番『生きてる！』と感じる瞬間は？",
-        choices: [
-            { 
-                text: "誰も見たことがないアイデアが降ってきた時", 
-                scores: { D: 2 },
-                deep: {
-                    text: "そのアイデアはどんな風に現れる？",
-                    choices: [
-                        { text: "ひとつの強烈な『完成形』が急に落ちてくる", scores: { M: 2, F: 1 } }, // 計画・構築寄り
-                        { text: "『もしこうだったら？』が無限に枝分かれする", scores: { I: 2, D: 1 } } // 衝動・空想寄り
-                    ]
-                }
-            },
-            { 
-                text: "バラバラの伏線が繋がって構造が完成した時", 
-                scores: { F: 2 },
-                deep: {
-                    text: "その構造の組み立て方は？",
-                    choices: [
-                        { text: "最初から結末を決めて逆算する", scores: { M: 2, L: 2 } },
-                        { text: "独自の法則やルールがカチッとハマる快感", scores: { L: 2, F: 1 } }
-                    ]
-                }
-            }
-        ]
-    },
-    {
-        type: "choice",
-        text: "読者（ユーザー）に一番言われて嬉しい感想は？",
-        choices: [
-            { text: "「このキャラ、本当に生きてるみたい…！」", scores: { C: 1, A: 1 } },
-            { text: "「設定の作り込みがエグい！天才！」", scores: { E: 1, L: 1 } }
-        ]
-    },
-    {
-        type: "choice",
-        text: "物語の結末（オチ）の決め方は？",
-        choices: [
-            { text: "書きながらキャラが導いた結末にする", scores: { I: 1, C: 1 } },
-            { text: "最初から決めておいた結末に向かって逆算する", scores: { M: 1, F: 1 } }
-        ]
-    },
-    {
-        type: "choice",
-        text: "突然、新しいサブキャラを出したくなった！",
-        choices: [
-            { text: "面白そうだからとりあえず出す！カオス歓迎！", scores: { I: 1, D: 1 } },
-            { text: "全体構成に必要かどうか、論理的に考える", scores: { M: 1, L: 1 } }
-        ]
-    },
-    {
-        type: "choice",
-        text: "作品のテーマや雰囲気を伝えるために大事にするのは？",
-        choices: [
-            { text: "エモい台詞や、心が揺さぶられる熱い展開", scores: { A: 2 } },
-            { text: "納得感のある展開と、無駄のない美しい構成", scores: { L: 2 } }
-        ]
-    },
-    {
-        type: "choice",
-        text: "もし、自分の作品をゲーム化するなら？",
-        choices: [
-            { text: "キャラとの絆を深めるRPGやノベルゲーム", scores: { C: 2 } },
-            { text: "世界の謎を解き明かす探索ゲーやシミュレーション", scores: { E: 2 } }
-        ]
-    },
-    {
-        type: "choice",
-        text: "あなたの創作を一言で表すと？",
-        choices: [
-            { text: "夢や感情を形にする『魔法』", scores: { D: 1, A: 1 } },
-            { text: "概念や法則を組み立てる『建築』", scores: { F: 1, L: 1 } }
-        ]
-    },
-    {
-        type: "text",
-        text: "あなたの作品に登場する『最強の武器・魔法』の名前と能力を直感で書いて！",
-        subText: "※すぐ短く書くか、長文で作り込むかを裏で観測します"
-    },
-    {
-        type: "event_collapse",
-        text: "⚠️ 緊急事態 ⚠️\nあなたの主人公が突然、仲間を裏切る行動を取り始めました！",
-        subText: "（※本能で対処してください）",
-        choices: [
-            { text: "「なぜ裏切ったか」の論理的理由を急いで後付けする", scores: { L: 2, M: 1 } },
-            { text: "「裏切った時の悲しい感情」をエモく書き殴る", scores: { A: 2, I: 1 } },
-            { text: "面白そうだからそのまま暴走させて結末を変える！", scores: { I: 2, D: 1 } }
-        ]
-    },
+// ==========================================
+// ⚙️ システム・状態管理
+// ==========================================
 
-    // 🎨 【新ギミック】配色反応テスト
-    {
-        type: "color_sky",
-        text: "あなたの今の創作世界に一番近い『空』は？",
-        subText: "※直感で選んで！迷った時間も観測しています。"
-    },
+// 共有用URLの設定
+const SHARE_URL = "https://mofu-mitsu.github.io/creator-brain-log";
+// メール送信機能用GASのURL
+const GAS_URL = "https://script.google.com/macros/s/AKfycbzeVpe1oYA7GSNMMq7Z3jDCMLhMvjnlktYOpyZFHrhPmzQQPabGQ1Vn9y7FgprNQBsMVA/exec";
 
-    // 🧩 【新ギミック】伏線配置ミニゲーム
-    {
-        type: "sortable",
-        text: "以下のアイテムを、物語で『重要になりそうな順』にタップして並べて！",
-        items: ["古びた鍵", "壊れた懐中時計", "誰かの手紙", "赤い瞳"],
-        // ※裏で「手紙（感情）」か「時計（論理）」どちらを先に選んだか判定します
-    },
+// プレイヤーのスコアを保持するオブジェクト
+let scores = { D: 0, F: 0, C: 0, E: 0, I: 0, M: 0, L: 0, A: 0 };
+let currentQ = 0;
+let qStartTime = 0;
+let timerInterval = null;
+let shuffledQuestions = [];
+let historyStack = [];
+let actionLogs = []; // 行動ログ保存用
+let loadingTimeout = null;
+let loadingTarget = "";
+// マウス迷い計測用の変数
+let mouseDistance = 0;
+let lastMousePos = { x: 0, y: 0 };
 
-    // ⏳ 【新ギミック】制限時間プロット (LIIキラーｗ)
-    {
-        type: "time_limit_text",
-        text: "【制限時間30秒】\n今パッと思い浮かんだ『物語のタイトル』を入力して！",
-        subText: "※時間切れでも自動で次に進みます。"
-    },
+function playLoading(target, title, text) {
+    showScreen('loading-screen');
+    document.getElementById('loading-title').innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> ${title}`;
+    document.getElementById('loading-text').innerText = text;
+    
+    const bar = document.getElementById('loading-bar');
+    bar.style.width = "0%";
+    
+    loadingTarget = target;
+    
+    // 3秒かけてバーが伸びるアニメーション
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += 2; // 50msごとに2%進む
+        bar.style.width = `${progress}%`;
+        if (progress >= 100) clearInterval(interval);
+    }, 50);
 
-    // 🧠 【新ギミック】脳内タブ数観測
-    {
-        type: "multi_select",
-        text: "創作中、脳内で同時に展開（起動）しているものは？（複数選択可）",
-        choices: [
-            { text: "キャラの会話", scores: { C: 1 } },
-            { text: "世界地図・年表", scores: { E: 1 } },
-            { text: "BGM", scores: { A: 1, D: 1 } },
-            { text: "伏線と構造", scores: { F: 1, L: 1 } },
-            { text: "設定資料（別窓）", scores: { M: 1, E: 1 } }
-        ]
-    },
+    // 3秒後に自動遷移
+    loadingTimeout = setTimeout(() => {
+        finishLoading();
+    }, 2500);
+}
 
-    // --- 改良版 スライダー ---
-    {
-        type: "slider",
-        text: "創作中、あなたの『脳内』の割合は？",
-        leftLabel: "直感・感情で暴走！",
-        rightLabel: "論理・計画で制御！",
-        leftAttr: "I", rightAttr: "M"
-    },
-
-    // --- 改良版 無意識お絵描き ---
-    {
-        type: "draw",
-        text: "キャンバスに今の『創作意欲』を自由に描いて！",
-        subText: "※線の数、使った色から思考パターンを抽出します。"
+function finishLoading() {
+    if (loadingTimeout) clearTimeout(loadingTimeout);
+    
+    if (loadingTarget === "start") {
+        showScreen('color-screen');
+    } else if (loadingTarget === "result") {
+        calculateResult(); // 本当の計算処理をここで呼ぶ
     }
-];
-const questionsData = [
-    { type: "choice", text: "新しい作品を作り始めるとき、まず何から考える？", choices: [{ text: "キャラのビジュアル、性格、関係性！", scores: { C: 2 } }, { text: "その世界のルール、歴史、システム", scores: { E: 2 } }] },
-    { type: "choice_deep", text: "創作中、一番『生きてる！』と感じる瞬間は？", choices: [ { text: "誰も見たことがないアイデアが降ってきた時", scores: { D: 2 }, deep: { text: "そのアイデアはどんな風に現れる？", choices: [{ text: "ひとつの強烈な『完成形』が急に落ちてくる", scores: { M: 2, F: 1 } }, { text: "『もしこうだったら？』が無限に枝分かれする", scores: { I: 2, D: 1 } }] } }, { text: "バラバラの伏線が繋がって構造が完成した時", scores: { F: 2 }, deep: { text: "その構造の組み立て方は？", choices: [{ text: "最初から結末を決めて逆算する", scores: { M: 2, L: 2 } }, { text: "独自の法則やルールがカチッとハマる快感", scores: { L: 2, F: 1 } }] } } ] },
-    { type: "event_collapse", text: "⚠️ 緊急事態 ⚠️\nあなたの主人公が突然、仲間を裏切る行動を取り始めました！", subText: "（※本能で対処してください）", choices: [{ text: "「なぜ裏切ったか」の論理的理由を急いで後付けする", scores: { L: 2, M: 1 } }, { text: "「裏切った時の悲しい感情」をエモく書き殴る", scores: { A: 2, I: 1 } }, { text: "面白そうだからそのまま暴走させて結末を変える！", scores: { I: 2, D: 1 } }] },
-    { type: "color_sky", text: "あなたの今の創作世界に一番近い『空』は？", subText: "※直感で選んで！迷った時間も観測しています。" },
-    { type: "sortable", text: "以下のアイテムを、物語で『重要になりそうな順』にタップして並べて！", items: ["古びた鍵", "壊れた懐中時計", "誰かの手紙", "赤い瞳"] },
-    { type: "text", text: "あなたの作品に登場する『最強の武器・魔法』の名前と能力を直感で書いて！", subText: "※すぐ短く書くか、長文で作り込むかを裏で観測します" },
-    { type: "multi_select", text: "創作中、脳内で同時に展開（起動）しているものは？（複数選択可）", choices: [{ text: "キャラの会話", scores: { C: 1 } }, { text: "世界地図・年表", scores: { E: 1 } }, { text: "BGM", scores: { A: 1, D: 1 } }, { text: "伏線と構造", scores: { F: 1, L: 1 } }, { text: "設定資料（別窓）", scores: { M: 1, E: 1 } }] },
-    { type: "time_limit_text", text: "【制限時間30秒】\n今パッと思い浮かんだ『物語のタイトル』を入力して！", subText: "※時間切れでも自動で次に進みます。" },
-    { type: "slider", text: "創作中、あなたの『脳内』の割合は？", leftLabel: "直感・感情で暴走！", rightLabel: "論理・計画で制御！", leftAttr: "I", rightAttr: "M" },
-    { type: "draw", text: "キャンバスに今の『創作意欲』を自由に描いて！", subText: "※線の数、使った色から思考パターンを抽出します。" }
-];
+}
 
-// ==========================================
-// 🎨 創作16タイプ・結果データ（究極大増量・容赦なき言語化版）
-// ==========================================
-const resultsData = {
-    // ------------------------------------------
-    // 【DA系統：幻想と感情の表現者】
-    // ------------------------------------------
-    "DCIA": { 
-        group: "DA系統：幻想と感情の表現者",
-        title: "星屑エモーター", 
-        img: "images/DCIA.png",
-        quote: "「設定の矛盾？そんなのどうでもいい。今、この子が泣いてるっていう事実が全てでしょ！」",
-        desc: "キャラの感情の深淵にまで潜り込み、あふれる衝動のままに世界を描き出す感情没入型クリエイター。",
-        personality: "圧倒的な感受性と深い内省力を持つタイプ。日常の些細な出来事や他人の微細な感情の揺れ動きすらも自分の中に取り込み、強烈な感情エネルギーとして蓄積する『魂の受信機』です。自身の内面にある「美しさ」や「譲れない価値観」に対しては絶対に妥協を許さず、それを否定されると静かに、しかし激しく心を閉ざします。論理的整合性よりも「その瞬間に心がどう動いたか」というエモーショナルな真実を何よりも重んじます。良くも悪くも自意識の塊であり、自分の生み出したもの＝自分の魂そのものです。",
-        creative_style: "プロットや構成といった枠組みを事前に用意することを嫌い、キャラクターの心に完全に憑依して紡ぎ出す「自動筆記」のような執筆・制作スタイルをとります。キャラが悲しめば作者も号泣し、キャラが怒れば作者も怒り狂うほどの異常な一体感を見せます。その結果、作者自身すら予測していなかった結末に辿り着くことが多々ありますが、その瞬間の爆発的な情景描写や、心の琴線に触れるポエティックな台詞回しは、他タイプには決して真似できない神がかった魅力を放ちます。",
-        danger: "深夜テンションに任せて、ポエムのような激重で感傷的な文章を書き殴り、翌朝正気に戻って「痛すぎる…」と悶絶してデータごと全消去する。感情が乗らないと1文字も書けないため、筆の遅さが天候より不安定。", 
-        best: "ポエム、雰囲気重視のイラスト、キャラの独白、エモーショナルな純文学"
-    },
-    "DCMA": { 
-        group: "DA系統：幻想と感情の表現者",
-        title: "キャラ専属プロデューサー", 
-        img: "images/DCMA.png",
-        quote: "「ここで最高の見せ場を作るから…！お願い、読者のみんな、この子を愛して！」",
-        desc: "キャラの魅力を最大限に引き出すために、計画的かつ緻密に感情の動きを設計するあざとい演出家。",
-        personality: "人間観察に長け、他人が『何に萌えるか』『どんな展開で感動するか』を本能的に理解している生粋のプロデューサー気質。とても面倒見が良く、自分の生み出したキャラが読者に愛され、推されることが何よりのモチベーションです。他者の感情を読み取る能力が高く、無意識のうちに『読者が今一番見たいもの』を提供しようとする、過剰なほどのサービス精神に溢れています。自分が表に出るより、推し（自キャラ）を輝かせることに命を懸けます。",
-        creative_style: "読者の感情を意のままにコントロールするための、極めて計画的なストーリー構成を組みます。キャラの成長ステップや、関係性の変化（いわゆるエモさの爆発）を最も効果的なタイミングで配置します。ただ感情のままに書くのではなく、「このタイミングでこの台詞を言わせれば読者は確実に泣く」という緻密な計算のもとにキャラクターを動かします。読者のツボを的確に突く、あざといまでの見せ場を作る天才です。",
-        danger: "自キャラに愛着と強烈な母性が湧きすぎてしまい、ストーリー上どうしても必要な『悲惨な展開』や『キャラの死』が可哀想で描けず、ご都合主義なハッピーエンドに逃げて物語の深みを消してしまう。", 
-        best: "アイドルもの、恋愛シナリオ、育成ゲーム、読者参加型企画"
-    },
-    "DEIA": { 
-        group: "DA系統：幻想と感情の表現者",
-        title: "妄想航海士", 
-        img: "images/DEIA.png",
-        quote: "「設定の矛盾？そんなの『太古の魔法』か『奇跡』ってことにしとけば解決だよ！！」",
-        desc: "壮大でエモい世界観を、あふれ出る衝動のままに無限に広げていく発想のバケモノ。",
-        personality: "常に新しいアイデアに飛びつく、エネルギーと好奇心の塊。細かいルールや現実の物理法則に縛られるのが大嫌いで、自分の直感と『ワクワクするかどうか』だけを信じて突き進む、天性の自由人です。頭の中では常に複数のアイデアがビッグバンを起こしており、ひとつのことに集中するのは苦手ですが、その分誰も追いつけないスピードで発想を横へ横へと広げることができます。熱しやすく冷めやすい究極の気分屋です。",
-        creative_style: "『誰も見たことがない美しい世界』をゼロから生み出す天才。設定の整合性や理屈よりも、『ロマン』と『映像的なエモさ』を最優先します。空飛ぶクジラ、ガラスでできた街、星を食べる少女など、幻想的な存在を衝動的かつ情熱的に描き出します。「もしこんな世界があったら」という妄想をそのまま高火力で出力するため、作品の熱量は凄まじいですが、途中で新しいアイデアを思いつくと平気で軌道修正します。",
-        danger: "世界観の風呂敷を宇宙規模まで広げまくった結果、どうやって物語を終わらせればいいか作者自身も分からなくなり、放置してまったく別の新しい作品を作り始める（未完の山ができる）。", 
-        best: "ハイファンタジー、世界観イラスト、音楽制作、童話"
-    },
-    "DEMA": { 
-        group: "DA系統：幻想と感情の表現者",
-        title: "象徴物語作家", 
-        img: "images/DEMA.png",
-        quote: "「この雨はただの天候ではない。世界が生まれ直すための、悲痛な浄化の儀式なのです」",
-        desc: "作品の奥底に、強いテーマや哲学的なメッセージ（暗喩）を込める孤独な求道者。",
-        personality: "非常に静かで哲学的。人間の精神世界や無意識の領域、生と死などの根源的なテーマに強い関心を持ち、物事の『表層』ではなく『裏にある本当の意味』を見抜こうとします。共感力が高すぎて、人の負の感情や社会の闇に当てられやすい一面もありますが、その痛みを作品に昇華することで世界と繋がろうとする、深い慈愛と孤独を抱えた人です。薄っぺらいハッピーエンドを嫌います。",
-        creative_style: "ただの娯楽作品ではなく、精神的な成長や哲学的なテーマを計画的に物語に組み上げます。登場するアイテム、天候、キャラの名前、何気ない台詞のすべてに『暗喩（メタファー）』や『象徴』が込められており、読み解くほどに深みが増すのが特徴です。一見するとただのファンタジーであっても、その裏には現代社会への痛烈な批判や、人間の業に対する深い洞察が執念深く隠されています。",
-        danger: "作品に込めたテーマやメッセージ性が深淵に到達しすぎてしまい、一般の読者には一切伝わらない、極めて難解でスピリチュアルな純文学と化す。解説されないと誰も理解できない。", 
-        best: "ダークファンタジー、神話的ストーリー、寓話、メッセージ性の強いノベルゲーム"
-    },
-
-    // ------------------------------------------
-    // 【DL系統：概念と空想の設計局】
-    // ------------------------------------------
-    "DCIL": { 
-        group: "DL系統：概念と空想の設計局",
-        title: "自由奔放な策略家", 
-        img: "images/DCIL.png",
-        quote: "「おっ、こいつここで裏切らせたら絶対おもしろい展開になるじゃん。理由は後で考えるわｗｗ」",
-        desc: "キャラを自由に暴れさせつつ、その予測不能な展開を論理パズルのように楽しむタイプ。",
-        personality: "好奇心旺盛で、常に『面白いこと』や『誰もやっていないこと』を探しているトリックスター。頭の回転が異常に速く、人の心理の裏を突くのが得意です。退屈な日常や縛られるルールを何よりも嫌い、常に新鮮な刺激を求めて思考を拡散させます。他人の感情に深く寄り添うことは少ないですが、「どうすれば人が驚き、手のひらの上で踊るか」を計算する能力はずば抜けています。根っからの愉快犯です。",
-        creative_style: "行き当たりばったりでカオスな展開を意図的に作り出し、後から天才的な論理と発想力で伏線を回収（後付け）していくスリリングなスタイル。キャラクターを極限のピンチに追い込み、そこからの逆転劇を描かせたら右に出る者はいません。事前にきっちり計画を立てると途端に義務感を感じて飽きてしまうため、常に自分自身すら騙すようなライブ感のある制作を好みます。",
-        danger: "思いつきでキャラに突飛な行動を取らせすぎた結果、風呂敷が広がりきり、どんな天才的な言い訳（論理）を使っても回収不可能なバグが発生し、そのまま失踪する。", 
-        best: "群像劇、コメディ、アドリブ重視のTRPG、サバイバル・デスゲーム"
-    },
-    "DCML": { 
-        group: "DL系統：概念と空想の設計局",
-        title: "啓示型設計者", 
-        img: "images/DCML.png", // みつきタイプ！
-        quote: "「すべては計算通り。この人格（システム）は、こういう環境下ではこう動く運命にある」",
-        desc: "完成形の世界の断片が脳に降りてくる『啓示』から始まり、それを緻密な論理で組み上げる特異な天才。",
-        personality: "内界に壮大な宇宙と高度な演算システムを併せ持つ特異な思考の持ち主。人間を単なる「感情で動く生き物」としてではなく、「こういう入力（心理的圧力）があれば、こういう出力（行動）をするはずだ」という『構造・システム（MBTIやソシオニクス的解釈）』として客観的に解剖・分析する癖があります。普段は極めて冷静で論理的ですが、一度自分の内なる「核となるビジョン」に触れた瞬間、それを現実世界に出力せずにはいられない熱狂を秘めています。",
-        creative_style: "創作の起点は、ある日突然脳内に「完成された概念や世界の断片」がフラッシュバックのように降りてくる『啓示』から始まります。そこから持ち前の圧倒的な論理構築力をフル稼働させ、そのビジョンを矛盾のない緻密なシステムとして言語化・構造化していきます。キャラクターの行動原理や相関関係すらも、精巧な時計の歯車のように完璧に噛み合うよう逆算して配置する、人間ドラマを冷徹な論理で組み上げるプレイスタイルです。",
-        danger: "設定資料、システム設計、完璧な相関図が完成した時点で脳内では『作品が完成した』と錯覚してしまい、肝心の本編の執筆が永遠に始まらない。設定の奴隷。", 
-        best: "群像劇の相関図作成、キャラの深層心理分析、壮大な世界観のRPG、診断メーカー作成"
-    },
-    "DEIL": { 
-        group: "DL系統：概念と空想の設計局",
-        title: "カオスエンジニア", 
-        img: "images/DEIL.png",
-        quote: "「この世界の物理法則のパラメーターをいじったら、どう崩壊するか試そうぜ」",
-        desc: "独自の世界のルールを思いつきで構築し、その中でどう論理が機能するかを試す実験者。",
-        personality: "常識を疑い、既存のシステムを解体して遊ぶマッドサイエンティスト気質。タブーや制約を壊すことに快感を覚え、誰も思いつかないような突飛な視点から物事を語るのが大好きです。権威や「普通はこうする」という言葉を最も嫌い、常に「本当にそうか？」と論理の穴を突き続けます。感情論で語りかけてくる人間を内心「処理能力が低い」と見下す、知的な傲慢さを秘めています。",
-        creative_style: "世界のルールや法則自体を作品のギミックにする作風。思いつきで『もし重力が逆になったら？』『もし嘘をついたら爆発する世界だったら？』等のカオスな世界線を次々と生み出し、その異常な環境下で登場人物がどう論理的な最適解を探るかという『思考実験』を好みます。作者自身も結末を知らず、システム同士がぶつかり合って生じるバグすらもエンタメとして楽しみます。",
-        danger: "世界のルールと裏設定を複雑にしすぎた結果、読者はおろか作者自身の脳の処理能力も限界を超え、物語の収拾がつかなくなって更新がストップする。", 
-        best: "SF、サイバーパンク、ローグライクゲーム、考察系ミステリー、SFプロトタイピング"
-    },
-    "DEML": { 
-        group: "DL系統：概念と空想の設計局",
-        title: "支配型プロデューサー", 
-        img: "images/DEML.png",
-        quote: "「私の描いた完璧な青写真通りに世界を動かす。いかなる妥協もバグも許さない」",
-        desc: "壮大な世界観とシステムを、冷徹な論理と揺るぎない計画で形にする総帥。",
-        personality: "圧倒的なカリスマ性と、目標達成に向けた強靭な意志を持つリーダー。自分の脳内にある『理想の世界（帝国）』を現実世界に具現化するためなら、いかなる複雑な設計や労力も惜しみません。感情論で計画が狂うことを非常に嫌い、全体を俯瞰して最も効率的で合理的なルートを選択します。非常にタフで、逆境さえもシステム改善の糧とする不屈の精神を持ちますが、他者への要求水準も高すぎる独裁者です。",
-        creative_style: "極めて長期的な視点で、世界観のルール、歴史、政治的背景、経済の仕組みまでを緻密に設計します。無駄な描写を嫌い、広げた伏線を完璧な論理で回収していく、重厚でスケールの大きいストーリーテリングが最大の武器です。個人の感情の揺れ動きよりも、国家間の争いや組織の動向といった「マクロな視点」での群像劇を描くことに圧倒的な適性があります。すべてを支配（コントロール）する創作です。",
-        danger: "自分自身に対する要求水準が異常に高すぎて永遠にリテイクを繰り返し、いつまで経っても世に公開できない。他人に手伝わせるとスパルタ指導で潰してしまう。", 
-        best: "大規模プロジェクトの統括、長編シリーズ、ストラテジーゲーム、重厚な戦記物"
-    },
-
-    // ------------------------------------------
-    // 【FA系統：日常と関係の観測所】
-    // ------------------------------------------
-    "FCIA": { 
-        group: "FA系統：日常と関係の観測所",
-        title: "日常スケッチャー", 
-        img: "images/FCIA.png",
-        quote: "「今日のコーヒーの匂いと窓際の光、なんだかすごく懐かしくて、泣きそう」",
-        desc: "既存の枠組みの中で、キャラの感情や空気感を直感的に切り取る感覚の天才。",
-        personality: "五感が非常に鋭く、日常の小さな変化や、ふとした瞬間の美しさに気づくことができる人。争いや殺伐とした展開を好まず、自分のペースで、自分の愛する世界の中で穏やかに過ごすことを求めます。言葉で論理的に理屈を説明するよりも、色彩や音、匂いといった「ダイレクトな感覚」を通して世界を理解し、表現しようとします。平和主義で、波風を立てるのが苦手です。",
-        creative_style: "何気ない日常のワンシーンや、言葉にならない細やかな感情の揺れ動きを描かせたらピカイチ。壮大な世界観や複雑なシステムを作るよりも、『今、ここにある空気感』や『季節の移ろい』を切り取った、スナップ写真のような繊細な作品を生み出します。キャラクターの等身大の悩みや、ささやかな幸せを描き出すのが得意で、読者に温かい癒やしを提供します。",
-        danger: "大きな事件や起承転結がまったく存在しない『ただ日常を過ごすだけの話』を延々と書き続け、最終的にオチが行方不明のまま「今日も平和だった」で終わる。", 
-        best: "日常系、エッセイ漫画、スナップ写真、短編小説、日記"
-    },
-    "FCMA": { 
-        group: "FA系統：日常と関係の観測所",
-        title: "人間関係ビルダー", 
-        img: "images/FCMA.png",
-        quote: "「Aがこう言ったら、不器用なBはきっとこういう顔をしてフォローするはず」",
-        desc: "丁寧な観察眼で、キャラ同士の繊細な関係性や感情のやり取りを計画的に描くタイプ。",
-        personality: "温和で常識的、そして極めて献身的。周囲の人間関係や空気を読むのが得意で、誰かが傷つくことを嫌います。とても几帳面で、過去の出来事や積み重ねてきた記憶を非常に大切にするタイプです。突飛で斬新なことよりも、安心感や安定感を好み、日常の中に潜む人間の善性や絆を信じています。真面目すぎるゆえにルールに縛られやすいのが玉に瑕。",
-        creative_style: "キャラのバックボーンや生活感を丁寧に、そして計画的に設定し、リアリティのある人間模様を描き出します。読者に強い安心感と共感を与え、『このキャラたちの日常をずっと見守っていたい』と思わせる圧倒的な求心力があります。劇的な展開よりも、日常の中での小さな心のすれ違いや、和解のカタルシスを美しく描く職人です。キャラの「生活音」が聞こえてくるような丁寧な描写が持ち味。",
-        danger: "脇役の過去話や、本筋に関係ない日常の細かいやり取り（ご飯を食べるシーンなど）を丁寧に丁寧に描きすぎて、物語がまったく前に進まない。", 
-        best: "ヒューマンドラマ、家族もの、お仕事もの、シチュエーションCD、群像劇"
-    },
-    "FEIA": { 
-        group: "FA系統：日常と関係の観測所",
-        title: "ムードクリエイター", 
-        img: "images/FEIA.png",
-        quote: "「細かい設定の整合性とかマジでどうでもいい！とにかくこのシーン、最高に映えるっしょ！」",
-        desc: "舞台装置や雰囲気を、その場の衝動と感覚で最高にエモく作り上げる演出家。",
-        personality: "明るく社交的で、その場の空気を支配する天性のムードメーカー。常に刺激を求め、美しいもの、楽しいもの、カッコいいものへのアンテナの感度が異常に高く、トレンドを取り入れるのが上手いです。過去の後悔や未来の不安よりも「今、この瞬間をどう楽しむか」に全力を注ぐ、超実践的な感覚派。理屈っぽい長話を聞くと3秒で眠くなります。",
-        creative_style: "読者や観客を一瞬でその世界に引き込む『映え』の演出を、本能と感覚で理解しています。色彩感覚、構図の取り方、BGMを流すタイミングなど、直感的な世界観の構築においては最強のポテンシャルを誇ります。緻密な設定を長々と語るよりも、1枚の圧倒的なビジュアルや、15秒のスタイリッシュな映像で全てを分からせる「感覚の暴力」で殴りかかるパワーを持っています。",
-        danger: "雰囲気と絵面のカッコよさは世界最高レベルだが、ストーリーの中身や設定の深さがスッカラカン。よく見ると辻褄が全く合っていない。", 
-        best: "MV制作、コンセプトアート、短編映像、イラスト集、ファッション誌"
-    },
-    "FEMA": { 
-        group: "FA系統：日常と関係の観測所",
-        title: "世界観の翻訳者", 
-        img: "images/FEMA.png",
-        quote: "「この街で動きを止めた巨大な歯車は、希望を失った人々の止まった時間の象徴なの」",
-        desc: "緻密に構築された世界の構造を用いて、感情や深いテーマを丁寧に読者に届ける語り部。",
-        personality: "真面目で思慮深く、他者の隠された感情に寄り添う深い優しさを持っています。現実世界の社会問題、歴史、文化に対する関心が非常に高く、それを自分の作品のフィルターを通して昇華しようとします。過去の教訓から学び、それを未来へ語り継ごうとする使命感のようなものを抱いています。ただの「萌え」では満足できず、作品に「意義」を求めます。",
-        creative_style: "構築された世界設定そのものが、キャラの心情や作品のテーマ（エモさ）のメタファーとして機能します。緻密な設定体系と深い感情描写を、計画的に美しく融合させ、読者を世界観に深く没入させる職人です。派手な魔法やバトルよりも、その世界で生きる人々の息遣いや、社会構造が個人に与える影響をドラマチックに描くのを得意とします。世界観を通して「人間」を描く作家です。",
-        danger: "世界観の歴史や設定の背景を読者に余すことなく伝えたいという想いが強すぎて、『説明セリフ』やナレーションが異常に長くなり、読者を置き去りにする。", 
-        best: "スチームパンク、ディストピア文学、重厚なノベルゲーム、歴史ファンタジー"
-    },
-
-    // ------------------------------------------
-    // 【FL系統：法則と構造の技術部】
-    // ------------------------------------------
-    "FCIL": { 
-        group: "FL系統：法則と構造の技術部",
-        title: "ギミック職人", 
-        img: "images/FCIL.png",
-        quote: "「ごちゃごちゃ語るな。その拳と、武器の弾道と、アクションで語れ」",
-        desc: "キャラのアクションや動きのギミックを、論理的かつ衝動的に組み立てる技巧派。",
-        personality: "クールで実用的。無駄な感情論や精神論を嫌い、『物理的にどう動くか』『どう機能するか』に強い興味を持ちます。職人気質で、自分の好きな技術や表現方法をストイックに磨くことに没頭します。一見そっけないですが、自分の好きなメカニズムやギミック（銃の構造、魔法の詠唱システムなど）の話になると途端に早口になるマニアックな一面を持ちます。",
-        creative_style: "かっこいいアクションシーンや、特殊な能力・武器のギミックを描くのが大好き。戦闘のロジックや物理的な動き、空間の把握能力に優れており、それを直感的かつ論理的に組み立てて魅せる天才です。台詞で状況を説明するのではなく、キャラクターの動きや武器の機能美そのもので物語を牽引する、非常にスタイリッシュで動的な作風を好みます。",
-        danger: "カッコいいアクションシーンや武器の詳細な設定画だけを描いて完全に満足してしまい、肝心のストーリー（誰と何のために戦うのか）を考えるのを放棄する。", 
-        best: "バトル漫画、アクションゲーム、メカデザイン、アニメーション制作"
-    },
-    "FCML": { 
-        group: "FL系統：法則と構造の技術部",
-        title: "概念観測者", 
-        img: "images/FCML.png",
-        quote: "「なるほど。この心理的ストレス下においては、キャラAの行動はBに帰結するのか。実に興味深い」",
-        desc: "キャラの動機や関係性を『理論』として分析し、計画的に構築する研究者。",
-        personality: "客観的で冷静。物事を一歩引いた場所から俯瞰し、法則性やパターンを見つけることに無上の喜びを感じます。他人の感情の機微すらも、『こういう歴史的背景があるからこう感じるのだ』と論理的に解釈する生粋の学者気質を持っています。共感して一緒に泣くよりも、安全な場所から観察・記録することを好むため、冷たい人間だと思われることもあります。",
-        creative_style: "一見するとただのキャラ萌え作品に見えて、実は『こういう条件下で人間はどう動くか』という社会実験を楽しんでいます。キャラの心理や関係性を、精密な理論（Ti）を用いて計画的に再構築し、矛盾のない物語を展開します。登場人物の行動動機が極めて論理的であり、読者に『なるほど、だからあの時あの行動をしたのか』というパズルが解けたような知的なアハ体験を与えます。",
-        danger: "キャラの行動原理を分析した緻密な心理学ノートや、関係性の変化をまとめた年表を作った時点で「やりきった」と満足してしまい、本文を書かない。", 
-        best: "群像ミステリー、TRPGシナリオ制作、相関図・概念図の作成、心理戦"
-    },
-    "FEIL": { 
-        group: "FL系統：法則と構造の技術部",
-        title: "即興ワールドビルダー", 
-        img: "images/FEIL.png",
-        quote: "「あー、その設定の矛盾？大丈夫、今3秒で論理的で完璧な言い訳を考えたから！」",
-        desc: "設定の矛盾をその場で論理的に解決しながら、世界をどんどん拡張していく開拓者。",
-        personality: "ピンチに異常に強く、土壇場でのアドリブ力が神がかっているタイプ。現実的でありながら非常に柔軟な思考を持ち、どんなトラブルや矛盾もゲーム感覚で楽しんで乗り越えてしまいます。机上の空論よりも「まずは動かしてみる」ことを重視する、フットワークの軽いハスラー気質です。ルールは守るものではなく、利用して抜け穴を探すものです。",
-        creative_style: "行き当たりばったりで世界を広げつつ、生じた矛盾や伏線を『天才的な論理展開』で即興で繋ぎ合わせるスタイル。まるで最初からすべて計算されていたかのように後付け設定を見せる、手品師のようなクリエイターです。計画通りに進めるよりも、読者の反応を見ながらリアルタイムで展開を変えていくライブ感のある創作を得意とし、ピンチをチャンスに変える筆力を持っています。",
-        danger: "後付けの『実は〇〇だった』という設定がジェンガのように高く重なりすぎ、ある日突然、どんな言い訳も通用しない限界を突破して世界が完全崩壊する。", 
-        best: "テーブルトークRPGのGM、週刊連載漫画、ライブドローイング、大喜利"
-    },
-    "FEML": { 
-        group: "FL系統：法則と構造の技術部",
-        title: "箱庭アーキテクト", 
-        img: "images/FEML.png",
-        quote: "「この世界の魔法体系は、熱力学第二法則に基づいて完璧に設計されている。一切の矛盾はない」",
-        desc: "緻密な構造と揺るぎない法則で、完璧な世界（箱庭）を創り上げるシステム構築者。",
-        personality: "極めて論理的で完璧主義者。一時的な感情論や、ご都合主義の「愛は勝つ」的な展開を嫌い、システムの合理性と知的な美しさを徹底的に追求します。自らの定めたルールで完全に統制され、予測不可能なバグが存在しない空間（箱庭）をこよなく愛するタイプです。現実の歴史、科学、政治に対する深いリスペクトと知識を持っています。",
-        creative_style: "世界地図、歴史年表、魔法の動作体系、政治経済の仕組みなど、世界の法則を完全に設計しきってから物語を動かします。設定の矛盾を絶対に許さず、すべての事象に論理的な裏付けを用意します。「キャラクターが動くから世界ができる」のではなく、「完璧な世界システムがあるから、キャラクターはその法則に従って動かざるを得ない」というアプローチをとるため、作品のリアリティと説得力は凄まじいものになります。",
-        danger: "本編が1ページも進まないまま、分厚い設定資料集や独自Wiki、果ては創作活動を便利にするための「自作ツール」のプログラミングばかりに時間を溶かす。", 
-        best: "診断メーカー開発、考察系ゲーム、世界観設定資料集、シミュレーションゲーム"
+// ⚠️ せっかち（強制スキップ）ボタンの処理！
+addEvent('impatient-btn', 'click', () => {
+    scores.I += 2; // 衝動(I)に+2点！！
+    addLog(`> せっかち検知: ローディングを強制スキップ (I+2)`);
+    finishLoading();
+});
+// マウスの動きを常時監視して移動距離を積算する
+document.addEventListener('mousemove', (e) => {
+    if (lastMousePos.x !== 0 && lastMousePos.y !== 0) {
+        let dx = e.clientX - lastMousePos.x;
+        let dy = e.clientY - lastMousePos.y;
+        mouseDistance += Math.sqrt(dx * dx + dy * dy);
     }
-};
+    lastMousePos = { x: e.clientX, y: e.clientY };
+});
+
+// ログを追加する共通関数
+function addLog(msg) {
+    actionLogs.push(msg);
+    console.log("[LOG]", msg);
+}
+
+// 配列をシャッフルする共通関数
+function shuffleArray(arr) {
+    return [...arr].sort(() => Math.random() - 0.5);
+}
+
+// 画面を切り替える共通関数
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+// ⚠️ 安全にイベントを登録する関数（nullエラーを完全に防止！）
+function addEvent(id, type, handler) {
+    const el = document.getElementById(id);
+    if (el) {
+        el.addEventListener(type, handler);
+    }
+}
 
 // ==========================================
-// 📖 診断・指標解説データ
+// 🚀 タイトル画面・ダッシュボード制御
 // ==========================================
-const aboutData = {
-    title: "『Creator Brain Log』の解析システムについて",
-    desc: "「このキャラ、勝手に喋り出すんです」「いや、設定資料を作るのが一番楽しい」——創作者たちがよく口にするこれらの言葉。実はこれ、単なるプレイスタイルではなく、脳の構造（認知の癖）の違いから来ています。<br><br>当システムは、心理機能論をベースにしつつ、クリエイターの「無意識の行動」を暴き出す独自の解析ツールです。褒め言葉だけのありきたりな診断ではありません。「なぜあなたは本編を書かずに設定ばかり練ってしまうのか」「なぜ深夜テンションでポエムを書いてしまうのか」、その痛い本質（バグ）まで容赦なく言語化します。",
-    axes: [
-        { 
-            name: "D/F軸：発想の起点", 
-            left: "D (Dream・空想)", 
-            right: "F (Frame・構築)", 
-            detail: "<b>【D】啓示を受ける夢想家：</b>ゼロから直感的にアイデアを降ろすタイプ。「突然、神設定が降ってきた！」と深夜に暴走しがち。初期衝動のエネルギーは凄まじいが、計画性がないため後から矛盾の沼に沈む。<br><br><b>【F】現実を再構築する建築家：</b>既存の枠組みや現実の法則（歴史・科学）をベースに世界を構築するタイプ。土台が強固で説得力があるが、設定作りに熱中しすぎて「本編が始まらない病」にかかりやすい。" 
-        },
-        { 
-            name: "C/E軸：世界の中心", 
-            left: "C (Character・人物)", 
-            right: "E (Environment・世界)", 
-            detail: "<b>【C】キャラの親・代弁者：</b>物語はキャラの感情や人間関係で動くもの、という価値観。「キャラが勝手に動く」現象を頻繁に体験する。世界観はあくまで推しを引き立てる舞台装置にすぎない。<br><br><b>【E】世界の観測者・神：</b>世界観のシステムや法則こそが主役。キャラクターはその美しいシステムを機能・観測させるための「歯車」や「実験体」として配置される。群像劇や歴史モノを好む。" 
-        },
-        { 
-            name: "I/M軸：制作スタイル", 
-            left: "I (Impulse・衝動)", 
-            right: "M (Method・計画)", 
-            detail: "<b>【I】ライブ感至上主義：</b>ノリと勢い、その場のパッションで筆を走らせる。事前にプロットを立てろと言われると途端に飽きる。傑作を生むか、翌朝見て悶絶する黒歴史になるかのギャンブル。<br><br><b>【M】完全主義の設計局：</b>プロットや設計図を完璧に練り上げないと1文字も書けない。伏線回収の美しさに命を懸けている。しかし、予定調和になりすぎて執筆途中で自分自身が飽きてしまうエラーが頻発する。" 
-        },
-        { 
-            name: "L/A軸：価値判断", 
-            left: "L (Logic・論理)", 
-            right: "A (Affect・感情)", 
-            detail: "<b>【L】整合性を愛する冷徹ロボ：</b>設定の矛盾のなさや論理性を愛する。読者に「なるほど！」と言わせる知的なカタルシスが至高。感情論だけで動くキャラを見ると「非合理的だ」と内心見下してしまう。<br><br><b>【A】エモさを追求する感情の獣：</b>心がどう動くか、どれだけ美しいかが絶対的基準。理屈では説明できない「魂の叫び」を描き出す天才だが、読者から論理破綻を突っ込まれると烈火の如く怒る。" 
+
+// ハンバーガーメニューの開閉
+addEvent('menu-btn', 'click', () => {
+    document.getElementById('side-menu').classList.toggle('active');
+});
+
+// メニューからのナビゲーション
+addEvent('nav-title', 'click', () => { 
+    showScreen('start-screen'); 
+    document.getElementById('side-menu').classList.remove('active'); 
+});
+addEvent('nav-list', 'click', () => { 
+    document.getElementById('btn-list').click(); 
+    document.getElementById('side-menu').classList.remove('active'); 
+});
+addEvent('nav-daily', 'click', () => { 
+    document.getElementById('btn-daily').click(); 
+    document.getElementById('side-menu').classList.remove('active'); 
+});
+addEvent('nav-about', 'click', () => { 
+    document.getElementById('btn-about').click(); 
+    document.getElementById('side-menu').classList.remove('active'); 
+});
+
+// 【診断開始】ボタンの処理
+addEvent('btn-start', 'click', () => {
+    scores = { D: 0, F: 0, C: 0, E: 0, I: 0, M: 0, L: 0, A: 0 };
+    currentQ = 0; actionLogs = ["観測開始プロトコル起動..."]; historyStack = [];
+    shuffledQuestions = shuffleArray(questionsData);
+    
+    setTimeout(spawnCaterpillar, Math.random() * 5000 + 5000);
+    
+    // いきなり color-screen に行かず、ローディングを挟む！
+    playLoading("start", "Booting...", "脳波スキャン準備中...");
+});
+
+// 【16タイプ図鑑】ボタンの処理
+addEvent('btn-list', 'click', () => {
+    const cont = document.getElementById('type-list-container');
+    const grouped = {};
+    
+    // データをグループごとに整理する
+    for (let key in resultsData) {
+        let g = resultsData[key].group || "その他";
+        if (!grouped[g]) {
+            grouped[g] = [];
         }
-    ]
+        grouped[g].push({ key, ...resultsData[key] });
+    }
+    
+    let html = "";
+    for (let g in grouped) {
+        html += `<h3 style="color:#a1c4fd; border-bottom:1px solid rgba(255,255,255,0.3); padding-bottom:5px; margin-top:20px;">${g}</h3>`;
+        grouped[g].forEach(d => {
+            html += `
+            <div class="list-item" data-type="${d.key}" style="margin-bottom:10px; padding:15px; background:rgba(255,255,255,0.05); border-radius:10px; cursor:pointer; border:1px solid transparent; transition:0.3s;">
+                <strong style="color:#ffb8d1; font-size:1.1em;">${d.key} : ${d.title}</strong><br>
+                <span style="font-size:0.8em; color:#ddd;">${d.desc}</span>
+            </div>`;
+        });
+    }
+    cont.innerHTML = html;
+    
+    // リストアイテムにホバーとクリックイベントを追加
+    document.querySelectorAll('.list-item').forEach(item => {
+        item.addEventListener('mouseenter', () => item.style.borderColor = '#ffb8d1');
+        item.addEventListener('mouseleave', () => item.style.borderColor = 'transparent');
+        item.addEventListener('click', () => { 
+            openDetailModal(item.getAttribute('data-type')); 
+        });
+    });
+    
+    showScreen('list-screen');
+});
+
+// 【システムマニュアル】ボタンの処理
+addEvent('btn-about', 'click', () => {
+    document.getElementById('about-title').innerText = aboutData.title;
+    document.getElementById('about-desc').innerHTML = aboutData.desc;
+    
+    const axesHTML = aboutData.axes.map(a => `
+        <div style="margin-bottom: 10px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+            <strong style="color: #ffb8d1;">${a.name}</strong><br>
+            <span style="font-size: 0.9em;">[ ${a.left} ] vs [ ${a.right} ]</span><br>
+            <span style="font-size: 0.8em; color: #ddd;">${a.detail}</span>
+        </div>
+    `).join('');
+    
+    document.getElementById('about-axes').innerHTML = axesHTML;
+    showScreen('about-screen');
+});
+
+// ==========================================
+// 📅 本日の創作啓示（日次・観測ターミナル）
+// ==========================================
+const dailyInspirationData = {
+    "DA系統": {
+        motifs: ["水没した廃都", "涙でできた宝石", "忘れられた星座", "終わらないお茶会", "割れた鏡の中", "真夜中の遊園地", "燃える手紙", "色褪せたリボン"],
+        bgms: ["雨音とピアノ", "オルゴール", "切ないケルト音楽", "無音", "波の音", "ジャズバラード", "アンビエント", "誰かのハミング"],
+        scenes: ["すれ違っていた二人が本音をぶつけ合うシーン", "過去のトラウマと向き合い、静かに涙を流すシーン", "言葉を交わさずとも、視線だけで理解し合うシーン"],
+        warnings: ["感情移入しすぎて執筆中に泣かないように。", "雰囲気だけで話を進めていませんか？", "キャラが可哀想でも、物語のために容赦なく突き落とす勇気を。", "伏線の回収を忘れないでください。"]
+    },
+    "DL系統": {
+        motifs: ["狂った歯車", "無限回廊", "観測者の眼", "崩壊するパラドックス", "錆びた計算機", "空白の辞書", "星の軌道", "冷たい数式"],
+        bgms: ["サイバーパンクなシンセ", "規則的な時計の秒針", "ノイズアンビエント", "重厚なオーケストラ", "環境音(タイピング)", "エレクトロニカ", "無機質なビート", "パイプオルガン"],
+        scenes: ["隠されていた世界の真実が、完璧な論理で明かされるシーン", "敵と味方が高度な心理戦・頭脳戦を繰り広げるシーン", "バラバラだった伏線が一気に繋がり、カタルシスを生むシーン"],
+        warnings: ["設定の複雑化に脳のリソースを奪われすぎています。本編を進めなさい。", "完璧を求めすぎていませんか？バグもエモさです。", "読者が置いてけぼりになっている可能性があります。", "ツールや相関図を作って満足していませんか？"]
+    },
+    "FA系統": {
+        motifs: ["二人だけの秘密基地", "夕暮れの教室", "飲みかけのコーヒー", "色褪せた写真", "帰り道の坂道", "手作りの料理", "雨上がりのアスファルト", "古い日記帳"],
+        bgms: ["カフェの雑踏音", "アコースティックギター", "日常系アニメのサントラ", "穏やかな波の音", "Lo-Fi HipHop", "ボサノバ", "電車のガタンゴトン", "鳥のさえずり"],
+        scenes: ["何気ない会話の中で、相手の成長や変化にふと気づくシーン", "美味しいご飯を一緒に食べて、心が満たされるシーン", "喧嘩のあとの、ちょっと不器用な仲直りのシーン"],
+        warnings: ["平和な日常描写が長すぎます。そろそろ事件を起こしましょう。", "脇役の過去話に尺を取りすぎていませんか？", "誰も傷つかない物語は美しいですが、時には衝突も必要です。", "起承転結の『転』を意識してください。"]
+    },
+    "FL系統": {
+        motifs: ["精巧な仕掛け武器", "魔法陣の設計図", "冷たい雨と鉄", "プログラムコード", "高層ビルの屋上", "血塗られた剣", "設計図", "実験室のフラスコ"],
+        bgms: ["テンポの速いロック", "作業用EDM", "戦闘BGMループ", "オーケストラとコーラス", "ドラムンベース", "インダストリアル", "メタル", "シンセウェイヴ"],
+        scenes: ["絶体絶命のピンチを、機転とギミックで論理的に突破するシーン", "長年磨き上げた技術や必殺技を解放するアクションシーン", "冷酷な敵が、主人公の策にハマって崩壊していくシーン"],
+        warnings: ["アクションやギミックの描写に夢中で、キャラの心情が疎かになっています。", "設定画を描いて満足していませんか？文章に起こしなさい。", "世界観の解説（ナレーション）を削って、台詞で語らせましょう。", "戦闘以外の日常シーンもたまには書きましょう。"]
+    }
 };
+
+addEvent('btn-daily', 'click', () => {
+    const typeSelect = document.getElementById('daily-type-select');
+    if (typeSelect.options.length === 1) { 
+        for (let key in resultsData) {
+            let opt = document.createElement('option');
+            opt.value = key; 
+            opt.text = `${key} : ${resultsData[key].title}`;
+            typeSelect.appendChild(opt);
+        }
+    }
+    showScreen('daily-screen');
+});
+
+addEvent('daily-type-select', 'change', (e) => {
+    if (e.target.value !== "") {
+        const typeKey = e.target.value;
+        const today = new Date();
+        document.getElementById('daily-date').innerText = `観測日時: ${today.getFullYear()}年${today.getMonth()+1}月${today.getDate()}日`;
+        
+        // 日付 ＋ タイプ文字列 でシード値を生成
+        let seedStr = today.getFullYear().toString() + today.getMonth() + today.getDate() + typeKey;
+        let seed = 0; 
+        for(let i=0; i<seedStr.length; i++) {
+            seed += seedStr.charCodeAt(i);
+        }
+        
+        // 疑似乱数ジェネレーター
+        const rand = (max) => (seed * 9301 + 49297) % 233280 % max;
+
+        // グループ判定
+        let groupKey = "DL系統";
+        if (typeKey.includes('D') && typeKey.includes('A')) groupKey = "DA系統";
+        else if (typeKey.includes('D') && typeKey.includes('L')) groupKey = "DL系統";
+        else if (typeKey.includes('F') && typeKey.includes('A')) groupKey = "FA系統";
+        else if (typeKey.includes('F') && typeKey.includes('L')) groupKey = "FL系統";
+
+        const data = dailyInspirationData[groupKey];
+        const types = Object.keys(resultsData);
+        
+        // 💡 1600万色から完全ランダムにHEXカラーを抽出する処理！
+        const r = Math.floor(rand(256));
+        const g = Math.floor(rand(256) + 50); // 色が変わりやすいように少しオフセット
+        const b = Math.floor(rand(256) + 100);
+        // RGBをHEX文字列に変換
+        const hexColor = "#" + r.toString(16).padStart(2, '0') + g.toString(16).padStart(2, '0') + b.toString(16).padStart(2, '0');
+        
+        document.getElementById('daily-color').innerText = hexColor;
+        document.getElementById('daily-color').style.color = hexColor;
+        document.getElementById('daily-color').style.textShadow = "1px 1px 2px #000";
+
+        document.getElementById('daily-motif').innerText = data.motifs[Math.floor(rand(data.motifs.length))];
+        document.getElementById('daily-bgm').innerText = data.bgms[Math.floor(rand(data.bgms.length))];
+        document.getElementById('daily-scene').innerText = data.scenes[Math.floor(rand(data.scenes.length))];
+        document.getElementById('daily-warning').innerText = data.warnings[Math.floor(rand(data.warnings.length))];
+        
+        // 本日の共鳴クリエイター（自分以外のタイプ）
+        let luckyType = types[Math.floor(rand(types.length))];
+        while (luckyType === typeKey) { 
+            seed++; 
+            luckyType = types[Math.floor(rand(types.length))]; 
+        } 
+        document.getElementById('daily-lucky-type').innerText = `${luckyType} (${resultsData[luckyType].title})`;
+
+        document.getElementById('daily-result-box').style.display = "block";
+    } else {
+        document.getElementById('daily-result-box').style.display = "none";
+    }
+});
+
+// ==========================================
+// 🧠 各種モーダル・ボタン処理
+// ==========================================
+
+// 退出確認モーダルの制御
+const quitModal = document.getElementById('quit-modal');
+addEvent('quit-btn', 'click', () => {
+    quitModal.classList.add('active');
+});
+addEvent('quit-no', 'click', () => {
+    quitModal.classList.remove('active');
+});
+addEvent('quit-yes', 'click', () => {
+    if (timerInterval) clearInterval(timerInterval);
+    quitModal.classList.remove('active');
+    showScreen('start-screen');
+});
+
+// 詳細モーダルを開く処理
+const detailModal = document.getElementById('type-detail-modal');
+function openDetailModal(type) {
+    const d = resultsData[type];
+    document.getElementById('detail-type').innerText = type;
+    document.getElementById('detail-title').innerText = d.title;
+    document.getElementById('detail-img').src = d.img || "";
+    document.getElementById('detail-quote').innerText = d.quote || "";
+    document.getElementById('detail-personality').innerText = d.personality || "";
+    document.getElementById('detail-creative').innerText = d.creative_style || "";
+    document.getElementById('detail-danger').innerText = d.danger || "";
+    detailModal.classList.add('active');
+}
+
+addEvent('close-detail-btn', 'click', () => {
+    detailModal.classList.remove('active');
+});
+
+addEvent('close-list-btn', 'click', () => showScreen('start-screen'));
+addEvent('close-about-btn', 'click', () => showScreen('start-screen'));
+addEvent('close-daily-btn', 'click', () => showScreen('start-screen'));
+addEvent('restart-btn', 'click', () => showScreen('start-screen'));
+
+// ==========================================
+// 🎨 無意識カラー選択 ＆ 質問開始
+// ==========================================
+addEvent('color-submit', 'click', () => {
+    const hex = document.getElementById('free-color-picker').value;
+    addLog(`最初のオーラ色に ${hex} を選択`);
+    
+    // 色の成分による初期パラメータ加算
+    let r = parseInt(hex.substring(1, 3), 16);
+    let g = parseInt(hex.substring(3, 5), 16);
+    let b = parseInt(hex.substring(5, 7), 16);
+    
+    if (r > g && r > b) {
+        scores.A += 2;
+        scores.I += 1;
+    } else if (b > r && b > g) {
+        scores.L += 2;
+        scores.M += 1;
+    } else if (g > r && g > b) {
+        scores.F += 2;
+        scores.C += 1;
+    } else {
+        scores.D += 2;
+    }
+    showQuestion();
+});
+
+// ==========================================
+// 🧩 質問描画メインロジック (1行圧縮禁止！全展開！)
+// ==========================================
+function showQuestion() {
+    // ★質問がすべて終わった時の処理を変更！
+    if (currentQ >= shuffledQuestions.length) {
+        if(timerInterval) clearInterval(timerInterval);
+        // 結果画面の前にローディングを挟む！
+        return playLoading("result", "Analyzing...", "全データをコンパイル中...");
+    }
+    
+    showScreen('question-screen');
+    const q = shuffledQuestions[currentQ];
+    
+    document.getElementById('q-number').innerText = `Q.${currentQ + 1} / ${shuffledQuestions.length}`;
+    document.getElementById('question-text').innerText = q.text;
+    
+    // イベント発生時のみ文字を赤くする
+    if (q.type === 'event_collapse') {
+        document.getElementById('question-text').style.color = '#ff5e62';
+    } else {
+        document.getElementById('question-text').style.color = '#ffb8d1';
+    }
+    
+    document.getElementById('question-sub').innerText = q.subText || "";
+
+    const container = document.getElementById('input-container');
+    container.innerHTML = '';
+    
+    qStartTime = Date.now();
+    mouseDistance = 0; // マウス迷い距離リセット
+
+    // ① 通常選択 ＆ イベント崩壊（2択）
+    if (q.type === 'choice' || q.type === 'event_collapse') {
+        q.choices.forEach(c => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.innerText = c.text;
+            btn.onclick = () => {
+                // マウスの迷いによる裏パラメータ加算
+                if (mouseDistance > 3000) {
+                    scores.M += 1;
+                    addLog(`マウス迷い検知: 計画(M)加算`);
+                } else if (mouseDistance < 500) {
+                    scores.I += 1;
+                    addLog(`即決検知: 衝動(I)加算`);
+                }
+                nextQuestion(c.scores);
+            };
+            container.appendChild(btn);
+        });
+    } 
+    // ② 深掘り（Ni/Ne判定など）
+    else if (q.type === 'choice_deep') {
+        q.choices.forEach(c => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.innerText = c.text;
+            btn.onclick = () => {
+                addLog(`思考分岐: [${c.text}] へ潜行`);
+                
+                // 第一階層のスコアを加算
+                for (let key in c.scores) {
+                    scores[key] += c.scores[key];
+                }
+                
+                // 画面を深掘り用の質問に切り替え
+                document.getElementById('question-text').innerText = c.deep.text;
+                container.innerHTML = '';
+                
+                c.deep.choices.forEach(dc => {
+                    const dbtn = document.createElement('button');
+                    dbtn.className = 'choice-btn';
+                    dbtn.innerText = dc.text;
+                    dbtn.onclick = () => {
+                        nextQuestion(dc.scores);
+                    };
+                    container.appendChild(dbtn);
+                });
+            };
+            container.appendChild(btn);
+        });
+    } 
+    // ③ 空の色選択（アイコンギミック）
+    else if (q.type === 'color_sky') {
+        const p = document.createElement('div');
+        p.className = 'sky-palette';
+        const skies = [
+            { class: 'sky-neon', text: 'ネオン', scores: { D: 1, I: 1 } },
+            { class: 'sky-mono', text: 'モノクロ', scores: { F: 1, L: 1 } },
+            { class: 'sky-sunset', text: '夕焼け', scores: { A: 2 } },
+            { class: 'sky-deep', text: '深海', scores: { M: 1, L: 1 } }
+        ];
+        skies.forEach(s => {
+            const btn = document.createElement('div');
+            btn.className = `sky-btn ${s.class}`;
+            btn.innerText = s.text;
+            btn.onclick = () => {
+                let time = Date.now() - qStartTime;
+                if (time < 2000) {
+                    scores.I += 1;
+                    addLog(`空: 即決で${s.text}を選択`);
+                } else {
+                    scores.M += 1;
+                    addLog(`空: 迷って${s.text}を選択`);
+                }
+                nextQuestion(s.scores);
+            };
+            p.appendChild(btn);
+        });
+        container.appendChild(p);
+    } 
+    // ④ 伏線並び替え（重要度順）
+    else if (q.type === 'sortable') {
+        let selectedOrder = [];
+        const itemsDiv = document.createElement('div');
+        q.items.forEach(item => {
+            const el = document.createElement('div');
+            el.className = 'sort-item';
+            el.innerText = item;
+            el.onclick = () => {
+                if (!selectedOrder.includes(item)) {
+                    selectedOrder.push(item);
+                    el.classList.add('selected');
+                    el.innerText += ` [${selectedOrder.length}]`;
+                    
+                    // 全て選び終わったら判定
+                    if (selectedOrder.length === q.items.length) {
+                        addLog(`構成順: ${selectedOrder[0]}優先`);
+                        let s = {};
+                        if (selectedOrder[0].includes("手紙")) {
+                            s.A = 2;
+                        } else {
+                            s.L = 2;
+                        }
+                        setTimeout(() => nextQuestion(s), 500);
+                    }
+                }
+            };
+            itemsDiv.appendChild(el);
+        });
+        container.appendChild(itemsDiv);
+    } 
+    // ⑤ 自由記述（最強武器など）
+    else if (q.type === 'text') {
+        const text = document.createElement('textarea');
+        text.className = 'cyber-textarea'; // デザイン適用
+        text.placeholder = "ここに入力してください...";
+        const btn = document.createElement('button');
+        btn.className = 'btn';
+        btn.innerText = "解析を開始";
+        
+        btn.onclick = () => {
+            const val = text.value.trim();
+            // ★適当入力の判定ロジック（同じ文字の連続、記号のみ、短すぎる等）
+            const isRepeated = /^(.)\1+$/.test(val); // 「あああ」「www」など
+            const isOnlySymbols = /^[\s、。！？!?,.・…\-_~^wWｗＷ]+$/.test(val); // 記号や空白のみ
+            
+            let s = {};
+            if (val.length === 0 || isRepeated || isOnlySymbols || val.length < 3) {
+                addLog(`> 警告: 適当な入力を検知「${val.substring(0, 10)}${val.length>10?'...':''}」 -> 衝動(I)加算`);
+                s.I = 2; // 適当に入力＝衝動的
+            } else {
+                addLog(`> 記述入力完了: 「${val.substring(0, 15)}${val.length>15?'...':''}」(${val.length}文字)`);
+                if(val.length > 30) s.F = 2; else s.D = 1;
+            }
+            nextQuestion(s);
+        };
+        container.append(text, document.createElement('br'), btn);
+    } 
+    // ⑥ 脳内タブ（複数選択）はそのまま飛ばして…
+
+    // ⑦ 制限時間プロット（30秒タイマー）
+    else if (q.type === 'time_limit_text') {
+        const text = document.createElement('textarea');
+        text.className = 'cyber-textarea';
+        text.placeholder = "タイトルを入力...";
+        
+        const timerDisplay = document.createElement('div');
+        timerDisplay.style.color = '#ffb8d1';
+        timerDisplay.style.fontWeight = 'bold';
+        timerDisplay.style.marginBottom = '10px';
+        
+        let timeLeft = 30;
+        const btn = document.createElement('button');
+        btn.className = 'btn';
+        btn.innerText = "完成！";
+        
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            timerDisplay.innerText = `残り時間: ${timeLeft}秒`;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                addLog("> 制限時間切れ: 計画性(M)を加点");
+                nextQuestion({ M: 2 });
+            }
+        }, 1000);
+
+        btn.onclick = () => {
+            clearInterval(timerInterval);
+            const val = text.value.trim();
+            const isRepeated = /^(.)\1+$/.test(val);
+            const isOnlySymbols = /^[\s、。！？!?,.・…\-_~^wWｗＷ]+$/.test(val);
+            
+            let s = { I: 2 }; // 間に合わせたので基本はIベース
+            if (val.length === 0 || isRepeated || isOnlySymbols || val.length < 2) {
+                addLog(`> 残り${timeLeft}秒で適当な入力を検知: 「${val.substring(0,10)}」`);
+            } else {
+                addLog(`> 残り${timeLeft}秒で作成: 「${val.substring(0,15)}${val.length>15?'...':''}」`);
+                if (val.length > 10) s.F = 1; // ちゃんと長く書けていればF追加
+            }
+            nextQuestion(s);
+        };
+        container.append(timerDisplay, text, document.createElement('br'), btn);
+    }
+    // ⑥ 脳内タブ（複数選択チェックボックス）
+    else if (q.type === 'multi_select') {
+        const checkboxes = [];
+        q.choices.forEach((c, idx) => {
+            const lbl = document.createElement('label');
+            lbl.className = 'multi-choice-label';
+            
+            const chk = document.createElement('input');
+            chk.type = 'checkbox';
+            chk.value = idx;
+            
+            checkboxes.push({ chk: chk, scores: c.scores, text: c.text });
+            lbl.appendChild(chk);
+            lbl.appendChild(document.createTextNode(c.text));
+            container.appendChild(lbl);
+        });
+        
+        const btn = document.createElement('button');
+        btn.className = 'btn';
+        btn.innerText = "決定";
+        btn.onclick = () => {
+            let add = {};
+            let count = 0;
+            checkboxes.forEach(item => {
+                if (item.chk.checked) {
+                    count++;
+                    for (let k in item.scores) {
+                        add[k] = (add[k] || 0) + item.scores[k];
+                    }
+                }
+            });
+            addLog(`脳内タブ: ${count}個同時展開`);
+            nextQuestion(add);
+        };
+        container.append(btn);
+    } 
+    // ⑦ 制限時間プロット（30秒タイマー）
+    else if (q.type === 'time_limit_text') {
+        const text = document.createElement('textarea');
+        const timerDisplay = document.createElement('div');
+        timerDisplay.style.color = '#ffb8d1';
+        timerDisplay.style.fontWeight = 'bold';
+        timerDisplay.style.marginBottom = '10px';
+        
+        let timeLeft = 30;
+        const btn = document.createElement('button');
+        btn.className = 'btn';
+        btn.innerText = "完成！";
+        
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            timerDisplay.innerText = `残り時間: ${timeLeft}秒`;
+            
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                addLog("制限時間切れ: 計画性(M)を加点");
+                nextQuestion({ M: 2 });
+            }
+        }, 1000);
+
+        btn.onclick = () => {
+            clearInterval(timerInterval);
+            addLog(`残り${timeLeft}秒で作成完了`);
+            let s = { I: 2 };
+            if (text.value.length > 10) {
+                s.F = 1;
+            }
+            nextQuestion(s);
+        };
+        container.append(timerDisplay, text, document.createElement('br'), btn);
+    } 
+    // ⑧ 脳内割合（スライダー）
+    else if (q.type === 'slider') {
+        const labels = document.createElement('div');
+        labels.className = 'slider-container';
+        
+        const spanL = document.createElement('span'); 
+        spanL.innerText = q.leftLabel;
+        const spanR = document.createElement('span'); 
+        spanR.innerText = q.rightLabel;
+        labels.append(spanL, spanR);
+
+        const slider = document.createElement('input');
+        slider.type = 'range'; 
+        slider.min = '0'; 
+        slider.max = '100'; 
+        slider.value = '50';
+        
+        const btn = document.createElement('button');
+        btn.className = 'btn';
+        btn.innerText = "決定";
+        
+        btn.onclick = () => {
+            let val = parseInt(slider.value);
+            let s = {};
+            addLog(`スライダー調整: ${val}%`);
+            
+            if (val < 40) {
+                s[q.leftAttr] = 2;
+            } else if (val > 60) {
+                s[q.rightAttr] = 2;
+            }
+            nextQuestion(s);
+        };
+        container.append(labels, slider, btn);
+    } 
+    // ⑨ 無意識お絵描き（キャンバス）
+    else if (q.type === 'draw') {
+        const canvas = document.createElement('canvas');
+        canvas.width = 280; 
+        canvas.height = 150;
+        const ctx = canvas.getContext('2d');
+        
+        // キャンバスを白く初期化
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        let isDrawing = false;
+        let strokes = 0;
+        
+        ctx.strokeStyle = '#ffb8d1'; 
+        ctx.lineWidth = 3; 
+        ctx.lineCap = 'round';
+
+        // マウス操作
+        canvas.onmousedown = (e) => { 
+            isDrawing = true; 
+            strokes++; 
+            ctx.beginPath(); 
+            ctx.moveTo(e.offsetX, e.offsetY); 
+        };
+        canvas.onmousemove = (e) => { 
+            if (isDrawing) { 
+                ctx.lineTo(e.offsetX, e.offsetY); 
+                ctx.stroke(); 
+            } 
+        };
+        canvas.onmouseup = () => { 
+            isDrawing = false; 
+        };
+        
+        // スマホタッチ操作
+        canvas.addEventListener('touchstart', (e) => { 
+            e.preventDefault(); 
+            isDrawing = true; 
+            strokes++; 
+            ctx.beginPath(); 
+            ctx.moveTo(e.touches[0].clientX - canvas.getBoundingClientRect().left, e.touches[0].clientY - canvas.getBoundingClientRect().top); 
+        });
+        canvas.addEventListener('touchmove', (e) => { 
+            e.preventDefault(); 
+            if (isDrawing) { 
+                ctx.lineTo(e.touches[0].clientX - canvas.getBoundingClientRect().left, e.touches[0].clientY - canvas.getBoundingClientRect().top); 
+                ctx.stroke(); 
+            } 
+        });
+        canvas.addEventListener('touchend', () => { 
+            isDrawing = false; 
+        });
+
+        // パレットとボタンの作成
+        const tools = document.createElement('div');
+        tools.className = 'canvas-tools';
+        tools.innerHTML = `<span>ペン色:</span><div class="mini-color-wrapper"><input type="color" id="draw-color" value="#ffb8d1"></div>`;
+        
+        const btn = document.createElement('button');
+        btn.className = 'btn';
+        btn.innerText = "完成！";
+        btn.onclick = () => {
+            const c = document.getElementById('draw-color').value;
+            addLog(`お絵描き完了: ${strokes}ストローク, 使用色: ${c}`);
+            
+            let s = {};
+            if (strokes > 10) { 
+                s.I = 2; 
+                s.D = 1; 
+            } else { 
+                s.M = 2; 
+                s.F = 1; 
+            }
+            nextQuestion(s);
+        };
+        container.append(canvas, tools, btn);
+
+        // カラーピッカーのイベント
+        setTimeout(() => {
+            const pc = document.getElementById('draw-color');
+            if (pc) {
+                pc.addEventListener('input', (e) => { 
+                    ctx.strokeStyle = e.target.value; 
+                    addLog(`> ペン色変更: ${e.target.value}`); 
+                });
+            }
+        }, 100);
+    }
+}
+
+// 質問遷移・ナビゲーション関数
+function nextQuestion(addScores = {}) {
+    historyStack.push({ 
+        index: currentQ, 
+        scores: { ...scores }, 
+        logs: [...actionLogs] 
+    });
+    
+    for (let k in addScores) {
+        scores[k] += addScores[k];
+    }
+    currentQ++;
+    showQuestion();
+}
+
+// 戻るボタンの処理
+addEvent('back-btn', 'click', () => {
+    if (historyStack.length > 0) {
+        if (timerInterval) clearInterval(timerInterval);
+        const last = historyStack.pop();
+        currentQ = last.index;
+        scores = last.scores;
+        actionLogs = last.logs;
+        showQuestion();
+    }
+});
+
+// パスボタンの処理
+addEvent('skip-btn', 'click', () => {
+    addLog("質問をパスしました");
+    nextQuestion({});
+});
+
+
+// ==========================================
+// 📊 結果計算・表示・共有機能
+// ==========================================
+
+// 指標バーを生成する関数
+function createBarHTML(leftScore, rightScore, leftLabel, rightLabel) {
+    let total = leftScore + rightScore;
+    let leftPct = total === 0 ? 50 : Math.round((leftScore / total) * 100);
+    let rightPct = 100 - leftPct;
+    
+    return `
+        <div class="bar-wrapper">
+            <div class="bar-labels">
+                <span style="color:#ffb8d1;">${leftLabel} ${leftPct}%</span>
+                <span style="color:#89f7fe;">${rightPct}% ${rightLabel}</span>
+            </div>
+            <div class="bar-container">
+                <div class="bar-left" style="width: ${leftPct}%;"></div>
+                <div class="bar-right" style="width: ${rightPct}%;"></div>
+            </div>
+        </div>
+    `;
+}
+
+// 結果を計算して画面に表示する
+function calculateResult() {
+    const type = (scores.D >= scores.F ? 'D' : 'F') + 
+                 (scores.C >= scores.E ? 'C' : 'E') + 
+                 (scores.I >= scores.M ? 'I' : 'M') + 
+                 (scores.L >= scores.A ? 'L' : 'A');
+                 
+    showScreen('result-screen');
+    
+    const res = resultsData[type] || { 
+        title: "特異点", 
+        desc: "解析不能な創作脳です。", 
+        danger: "不明", 
+        best: "未知", 
+        quote: "", 
+        personality: "", 
+        creative_style: "", 
+        group: "分類不能" 
+    };
+    
+    // 画像の表示
+    const resultImg = document.getElementById('result-img');
+    if (resultImg) {
+        resultImg.src = res.img || "";
+        resultImg.style.display = res.img ? "inline-block" : "none";
+    }
+    
+    // テキストデータの挿入
+    document.getElementById('result-group').innerText = res.group || "";
+    document.getElementById('result-type').innerText = type;
+    document.getElementById('result-title').innerText = res.title;
+    document.getElementById('result-quote').innerText = res.quote || "";
+    document.getElementById('result-desc').innerText = res.desc || "";
+    document.getElementById('result-personality').innerText = res.personality || "";
+    document.getElementById('result-creative').innerText = res.creative_style || "";
+    document.getElementById('result-danger').innerText = res.danger || "";
+    document.getElementById('result-best').innerText = res.best || "";
+
+    // 📊 指標バーの描画
+    const barsHTML = 
+        createBarHTML(scores.D, scores.F, "D(空想)", "F(構築)") +
+        createBarHTML(scores.C, scores.E, "C(人物)", "E(世界)") +
+        createBarHTML(scores.I, scores.M, "I(衝動)", "M(計画)") +
+        createBarHTML(scores.L, scores.A, "L(論理)", "A(感情)"); 
+    document.getElementById('result-bars').innerHTML = barsHTML;
+
+    // ログの最終追記
+    actionLogs.push(`--- 最終スコア解析 ---`);
+    actionLogs.push(`D:${scores.D} / F:${scores.F}`);
+    actionLogs.push(`C:${scores.C} / E:${scores.E}`);
+    actionLogs.push(`I:${scores.I} / M:${scores.M}`);
+    actionLogs.push(`L:${scores.L} / A:${scores.A}`);
+    actionLogs.push(`プロトコル完了: [${type}]`);
+    
+    const logList = document.getElementById('action-log-list');
+    logList.innerHTML = actionLogs.map(log => `<div>> ${log}</div>`).join('');
+
+    // GASへのデータ送信
+    if (GAS_URL && GAS_URL !== "ここにGASのURLをいれる") {
+        fetch(GAS_URL, { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'text/plain' }, 
+            body: JSON.stringify({ 
+                email: "momoka.mimika1122@gmail.com", 
+                type: type, 
+                title: res.title, 
+                logs: actionLogs.join('\n') 
+            }) 
+        }).catch(e => console.error(e));
+    }
+}
+
+// シェアボタンの処理
+addEvent('share-btn', 'click', () => {
+    const type = document.getElementById('result-type').innerText;
+    const title = document.getElementById('result-title').innerText;
+    
+    const getP = (s1, s2) => s1+s2===0 ? 50 : Math.round((s1/(s1+s2))*100);
+    const text = `私の創作深層心理は【${type}：${title}】でした！\n\n`
+               + `D(空想)${getP(scores.D, scores.F)}% - F(構築)${100-getP(scores.D, scores.F)}%\n`
+               + `C(人物)${getP(scores.C, scores.E)}% - E(世界)${100-getP(scores.C, scores.E)}%\n`
+               + `I(衝動)${getP(scores.I, scores.M)}% - M(計画)${100-getP(scores.I, scores.M)}%\n`
+               + `L(論理)${getP(scores.L, scores.A)}% - A(感情)${100-getP(scores.L, scores.A)}%\n\n`
+               + `行動ログまで暴かれるヤバい診断…🧠🧪\n#創作16タイプ診断 #CreatorBrainLog\n`;
+               
+    if (navigator.share) {
+        navigator.share({ title: '創作深層心理診断', text: text, url: SHARE_URL }).catch(e=>{});
+    } else {
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(SHARE_URL)}`, '_blank');
+    }
+});
+
+// 画像保存の処理
+addEvent('save-img-btn', 'click', () => { 
+    html2canvas(document.getElementById('capture-area'), { backgroundColor: "#1e1432", scale: 2 }).then(canvas => { 
+        const link = document.createElement('a'); 
+        link.download = `CreatorBrainLog_${document.getElementById('result-type').innerText}.png`; 
+        link.href = canvas.toDataURL(); 
+        link.click(); 
+    }); 
+});
+
+// ログコピー処理
+addEvent('copy-log-btn', 'click', () => { 
+    navigator.clipboard.writeText(actionLogs.join('\n')).then(() => alert("深層ログをコピーしました！")); 
+});
+
+// リスタート処理
+addEvent('restart-btn', 'click', () => {
+    showScreen('start-screen');
+});
+
+// ==========================================
+// 🚨 ランダムギミック群（アラート・芋虫・Glitch）
+// ==========================================
+
+const alerts = [
+    { text: "今、新しいキャラを追加したくなりましたか？", yes: () => { scores.D+=2; addLog("衝動検知: 新キャラ追加の欲求"); }, no: () => { scores.F+=2; addLog("維持検知: 既存構成の重視"); } },
+    { text: "設定に致命的な矛盾を発見しました！直しますか？", yes: () => { scores.M+=2; addLog("論理検知: 整合性へのこだわり"); }, no: () => { scores.I+=2; addLog("衝動検知: 勢いの重視"); } },
+    { text: "作品のテーマを、今すぐ誰かに語りたくなりましたか？", yes: () => { scores.A+=2; addLog("感情検知: 表出への欲求"); }, no: () => { scores.L+=2; addLog("論理検知: 内面での完結"); } },
+    { text: "今、眠いですか？（創作Si観測）", yes: () => { addLog("Si: 疲労を検知"); }, no: () => { addLog("Si: 覚醒状態を確認"); } },
+    { text: "新キャラを唐突に死なせたくなりましたか？", yes: () => { scores.I += 2; addLog("破壊的衝動を確認"); }, no: () => { scores.M += 2; addLog("物語の安定性を重視"); } },
+    { text: "タイトルを今すぐオシャレな英単語に変えたい？", yes: () => { scores.D += 2; addLog("表層的直感を検知"); }, no: () => { scores.F += 2; addLog("構造的本質を維持"); } },
+    { text: "読者の反応が怖くなってきましたか？", yes: () => { scores.A += 2; addLog("外部評価への敏感性"); }, no: () => { scores.L += 2; addLog("自己完結的論理性"); } }
+];
+
+// アラートの定期実行（15秒ごと）
+setInterval(() => {
+    if (!document.getElementById('question-screen').classList.contains('active') || document.getElementById('impulse-popup')) return;
+    if (Math.random() > 0.2) return;
+    
+    const al = alerts[Math.floor(Math.random() * alerts.length)];
+    const pop = document.createElement('div'); 
+    pop.id = 'impulse-popup'; 
+    pop.className = 'popup-log';
+    pop.innerHTML = `
+        <p style="font-size:0.9em; margin-bottom:10px;">⚠️ 観測ログ: ${al.text}</p>
+        <div style="display:flex; gap:10px; justify-content:center;">
+            <button id="pop-yes" class="sub-btn" style="color:#fff; border-color:#fff;">YES</button>
+            <button id="pop-no" class="sub-btn" style="color:#fff; border-color:#fff;">NO</button>
+        </div>
+    `;
+    document.body.appendChild(pop);
+    
+    document.getElementById('pop-yes').onclick = () => { al.yes(); pop.remove(); };
+    document.getElementById('pop-no').onclick = () => { al.no(); pop.remove(); };
+    
+    setTimeout(() => { if (document.body.contains(pop)) pop.remove(); }, 5000);
+}, 15000);
+
+// Glitch（ノイズ）演出の定期実行（20秒ごと）
+setInterval(() => {
+    if (!document.getElementById('question-screen').classList.contains('active') || Math.random() > 0.15) return;
+    
+    document.body.classList.add('glitch-active');
+    let reacted = false; 
+    
+    const reactHandler = () => { 
+        reacted = true; 
+        scores.I += 2; 
+        addLog("Glitchに即反応(I+2)"); 
+    };
+    
+    document.addEventListener('click', reactHandler, { once: true });
+    
+    setTimeout(() => { 
+        document.body.classList.remove('glitch-active'); 
+        document.removeEventListener('click', reactHandler); 
+        if (!reacted) { 
+            scores.M += 2; 
+            addLog("Glitchを冷静にスルー(M+2)"); 
+        } 
+    }, 1500);
+}, 20000);
+
+// 芋虫（システムバグ）の処理
+let globalBugHits = 0; 
+function spawnCaterpillar() {
+    if (document.getElementById('caterpillar') || !document.getElementById('question-screen').classList.contains('active')) return;
+    
+    const bug = document.createElement('div'); 
+    bug.id = 'caterpillar'; 
+    bug.innerText = '🐛'; 
+    bug.style.animation = 'crawl 15s linear forwards';
+    
+    const speech = document.createElement('div'); 
+    speech.id = 'caterpillar-speech'; 
+    bug.appendChild(speech);
+    
+    const quotes = ["システムの構築には時間が必要だ…", "Tiの構造が乱れている…", "SLE、また貴様か…！", "Seの暴力はやめたまえ…", "Niが告げている…"];
+    
+    const hitBug = (e) => {
+        e.preventDefault(); 
+        globalBugHits++; 
+        bug.style.transform = `scale(${1 - globalBugHits*0.03})`;
+        speech.innerText = quotes[Math.floor(Math.random() * quotes.length)]; 
+        speech.style.opacity = 1; 
+        
+        setTimeout(() => speech.style.opacity = 0, 1500);
+        addLog(`> 芋虫に攻撃 (累計 ${globalBugHits}回目)`);
+        
+        if (globalBugHits >= 30) {
+            bug.innerText = '💥'; 
+            speech.innerText = "システム崩壊…！！"; 
+            speech.style.opacity = 1; 
+            scores.I += 3; 
+            scores.E += 2;
+            addLog("芋虫を完全に粉砕した (I+3, E+2)"); 
+            globalBugHits = 0; 
+            setTimeout(() => bug.remove(), 1000);
+        }
+    };
+    
+    bug.addEventListener('mousedown', hitBug); 
+    bug.addEventListener('touchstart', hitBug);
+    document.body.appendChild(bug);
+    
+    bug.addEventListener('animationend', () => {
+        if (globalBugHits > 0 && globalBugHits < 30) {
+            addLog(`> 芋虫は逃げ切った(現在 被弾${globalBugHits}回)`);
+        }
+        bug.remove(); 
+        setTimeout(spawnCaterpillar, Math.random() * 20000 + 10000);
+    });
+}
