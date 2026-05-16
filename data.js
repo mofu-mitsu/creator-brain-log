@@ -10,7 +10,6 @@ const questionsData = [
     {
         type: "choice",
         text: "キャラが絶体絶命のピンチ！どう切り抜けさせる？",
-        subText: "（※裏ギミック：即答なら衝動[I]、迷ったら計画[M]に加点されます）",
         choices: [
             { text: "キャラの強い想いと感情の爆発で突破！", scores: { A: 2 } },
             { text: "事前に張っておいた伏線と論理で解決！", scores: { L: 2 } }
